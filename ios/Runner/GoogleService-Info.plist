@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>718421263049-02k5741koldur13bqifnaddotib54qpf.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.718421263049-02k5741koldur13bqifnaddotib54qpf</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>718421263049-0i3o77jfsbp1jckhlfict9utls5glrjg.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCWTxXydARvI77a-JHqcOHVaEGY61tpj3o</string>
+	<key>GCM_SENDER_ID</key>
+	<string>718421263049</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.prAlprUpc</string>
+	<key>PROJECT_ID</key>
+	<string>nevada-alpr-upc</string>
+	<key>STORAGE_BUCKET</key>
+	<string>nevada-alpr-upc.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:718421263049:ios:6f5e072d52661d45c84318</string>
+</dict>
+</plist>

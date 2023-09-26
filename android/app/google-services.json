@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "718421263049",
+    "project_id": "nevada-alpr-upc",
+    "storage_bucket": "nevada-alpr-upc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718421263049:android:45dd31f3927b3ba8c84318",
+        "android_client_info": {
+          "package_name": "com.example.pr_alpr_upc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "718421263049-0i3o77jfsbp1jckhlfict9utls5glrjg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pr_alpr_upc",
+            "certificate_hash": "442f1b43acdfde0dbcf812251f1998d4fea33de8"
+          }
+        },
+        {
+          "client_id": "718421263049-3ls24cd34pdjj0h37831dbsiek3e0v16.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDE6pwhck-61dAOiwhk616KYxa2ebCtZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "718421263049-3ls24cd34pdjj0h37831dbsiek3e0v16.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
