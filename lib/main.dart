@@ -2,23 +2,26 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pr_alpr_upc/firebase_options.dart';
 import 'package:pr_alpr_upc/src/pages/alert_page.dart';
+import 'package:pr_alpr_upc/src/pages/home_page.dart';
 import 'package:pr_alpr_upc/src/pages/login_page.dart';
 import 'package:pr_alpr_upc/src/pages/initial_page.dart';
+import 'package:pr_alpr_upc/src/pages/notification_page.dart';
 import 'package:pr_alpr_upc/src/theme/theme_constans.dart';
 import 'package:pr_alpr_upc/src/theme/theme_manager.dart';
-
 
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
+  runApp(const MyApp());
 
 }
 
 ThemeManager _themeManager = ThemeManager.instance;
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -43,9 +46,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Material App',
-      initialRoute: 'initial',
+      initialRoute: 'home',
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: _themeManager.themeMode,
@@ -53,7 +57,9 @@ class _MyAppState extends State<MyApp> {
       routes: {
         'initial': (BuildContext context) => const InitialPage(),
         'login': (BuildContext context) => const LoginPage(),
-        'alert': (BuildContext context) => AlertPage(),
+        'alert': (BuildContext context) => const AlertPage(),
+        'home' : (BuildContext context) => const HomePage(),
+        'notification' : (BuildContext context) => const NotificationPage()
 
       },
     );

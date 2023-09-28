@@ -6,6 +6,7 @@ class ThemeManager with ChangeNotifier{
   ThemeMode _themeMode = ThemeMode.light;
 
   ThemeManager._();
+
   static ThemeManager instance = ThemeManager._();
 
   ThemeMode get themeMode => _themeMode;

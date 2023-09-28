@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 const lightBackgroundColor = Colors.white;
 const lightOnBackgroundColor = Color.fromRGBO(25, 35, 66, 1);
@@ -34,6 +33,7 @@ ThemeData lightTheme = ThemeData(
     titleSmall: _titleFontBuilder(18.0, lightTitleColor),
     titleMedium: _titleFontBuilder(24.0, lightTitleColor),
     titleLarge: _titleFontBuilder(32.0, lightTitleColor),
+    bodySmall: _titleFontBuilder(16, lightOnSurfaceColor)
   ),
 
 );

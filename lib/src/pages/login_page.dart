@@ -13,10 +13,7 @@ class LoginPage extends StatelessWidget {
 
   Widget _createElements(BuildContext context) {
     return Stack(
-      children: [
-        _createHeader(context),
-        _createBody(context)
-      ],
+      children: [_createHeader(context), _createBody(context)],
     );
   }
 
@@ -31,6 +28,7 @@ class LoginPage extends StatelessWidget {
           children: [
             SizedBox(height: height * 0.10),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Bienvenido a',
                     style: Theme.of(context).textTheme.titleMedium,
@@ -38,8 +36,7 @@ class LoginPage extends StatelessWidget {
                 Text(
                   'SmartParking',
                   style: Theme.of(context).textTheme.titleMedium,
-                  textAlign: TextAlign.left
-                  ,
+                  textAlign: TextAlign.left,
                 ),
               ],
             )
@@ -50,22 +47,25 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _createBody(BuildContext context) {
-
     TemplateButtons templateButtons = TemplateButtons();
-    AuthService authService = AuthService();
+    AuthService authService = AuthService.instance;
 
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Expanded(child: SizedBox()),
-          templateButtons.createPrimaryButton('Login', () {authService.handleSignIn();}, context, 0.9),
-          const SizedBox(height: 10,),
-          templateButtons.createSecundaryButton('Sign In', authService.handleSignOut, context, 0.9),
-          const SizedBox(height: 30,)
-        ]
-      ),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const Expanded(child: SizedBox()),
+        templateButtons.createPrimaryButton('Login', () {
+          authService.handleSignIn(context);
+        }, context, 0.9),
+        const SizedBox(
+          height: 10,
+        ),
+        templateButtons.createSecundaryButton('Sign In', () {
+          authService.handleSignOut();
+        }, context, 0.9),
+        const SizedBox(
+          height: 30,
+        )
+      ]),
     );
   }
-
 }

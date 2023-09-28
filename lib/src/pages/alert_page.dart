@@ -8,42 +8,26 @@ class AlertPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     String selectPage = 'success';
-
-    Map caseSelector = {
-      'warning': {
-        'color' : Colors.amber,
-        'icon' : Icons.warning_amber,
-        'title': 'Precaución'
-      },
-      'error': {
-        'color' : Theme.of(context).colorScheme.error,
-        'icon' : Icons.close,
-        'title': 'Error'
-
-      },
-      'success': {
-        'color' : Theme.of(context).colorScheme.primary,
-        'icon' : Icons.check,
-        'title': 'Success'
-
-      }
-    };
+    final alertData = ModalRoute.of(context)?.settings.arguments as Map;
 
     ImageManager imageManager = ImageManager.instance;
 
-    return Scaffold(
-      backgroundColor: caseSelector[selectPage]['color'],
-      body: Stack(
-        children: [
-          imageManager.getBackgroundBottomAlertImage(context),
-          imageManager.getBackgroundTopAlertImage(context),
-          _createAlertSubject(context, caseSelector, selectPage)
-        ],
+    return GestureDetector(
+      onTap: Navigator.of(context).pop,
+      child: Scaffold(
+        backgroundColor: alertData['color'],
+        body: Stack(
+          children: [
+            imageManager.getBackgroundBottomAlertImage(context),
+            imageManager.getBackgroundTopAlertImage(context),
+            _createAlertSubject(context, alertData, selectPage)
+          ],
+        ),
       ),
     );
   }
 
-  Widget _createAlertSubject(BuildContext context, Map caseSelector, String selectPage) {
+  Widget _createAlertSubject(BuildContext context, Map alertData, String selectPage) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -56,18 +40,19 @@ class AlertPage extends StatelessWidget {
               color: Theme.of(context).colorScheme.onError,
             ),
             child: Icon(
-              caseSelector[selectPage]['icon'],
+              alertData['icon'],
               size: 50,
-              color: caseSelector[selectPage]['color']
+              color: alertData['color']
             ),
           ),
-          Text(caseSelector[selectPage]['title'],
+          Text(alertData['title'],
               style: Theme.of(context)
                   .textTheme
                   .titleMedium
                   ?.copyWith(color: Theme.of(context).colorScheme.onError)
           ),
-          Text('Proceso realizado con éxito',
+          Text(alertData['message'],
+              textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge

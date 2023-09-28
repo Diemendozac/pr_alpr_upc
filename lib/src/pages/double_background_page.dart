@@ -4,11 +4,11 @@ import 'package:pr_alpr_upc/src/theme/image_manager.dart';
 
 class DoubleBackgroundPage extends StatelessWidget {
 
-  ImageManager imageManager = ImageManager.instance;
+  final ImageManager imageManager = ImageManager.instance;
 
   final Widget contentWidget;
 
-  DoubleBackgroundPage( this.contentWidget );
+  DoubleBackgroundPage( this.contentWidget, {super.key} );
 
   @override
   Widget build(BuildContext context) {
