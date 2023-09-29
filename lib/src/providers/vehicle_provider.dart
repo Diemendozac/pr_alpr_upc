@@ -1,7 +1,10 @@
 
+
+import 'package:pr_alpr_upc/src/models/vehicle.dart';
+
 class VehicleProvider {
 
-  List<Map<String, String>> _userVehicles = [
+  final List<Map<String, String>> _userVehicles = [
     {
       'licensePlate' : 'WCZ-32A',
       'brand' : 'Suzuki',
@@ -22,5 +25,5 @@ class VehicleProvider {
     },
   ];
 
-  List<Map<String, String>> get userVehicles => _userVehicles;
+  List<Vehicle> get userVehicles => Vehicles.fromJsonList(_userVehicles).items;
 }

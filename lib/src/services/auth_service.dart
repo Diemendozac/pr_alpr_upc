@@ -24,7 +24,7 @@ class AuthService {
       if(googleUser != null) {
         if(!googleUser.email.endsWith('unicesar.edu.co')){
           handleSignOut();
-          if(context.mounted) Navigator.pushNamed(context, 'alert', arguments: templateAlerts.notAllowedAcount );
+          if(context.mounted) Navigator.pushNamed(context, 'alert', arguments: templateAlerts.confidentUserWarning );
           return;
         }
         GoogleSignInAuthentication googleAuth = await googleUser.authentication;

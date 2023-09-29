@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pr_alpr_upc/src/services/user_provider.dart';
+import 'package:pr_alpr_upc/src/providers/user_provider.dart';
 
 
 class NotificationPage extends StatelessWidget {

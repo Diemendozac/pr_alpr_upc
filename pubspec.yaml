@@ -66,6 +66,7 @@ flutter:
     - assets/img/light/
     - assets/img/dark/
     - assets/img/alert/
+    - assets/img/brands/
     - assets/fonts/
   #   - images/a_dot_ham.jpeg
 

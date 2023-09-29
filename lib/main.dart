@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       title: 'Material App',
-      initialRoute: 'home',
+      initialRoute: 'initial',
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: _themeManager.themeMode,

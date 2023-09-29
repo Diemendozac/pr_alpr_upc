@@ -10,11 +10,18 @@ class TemplateAlerts {
   static const warningColor = Colors.amber;
   static const successColor = Color.fromRGBO(86, 125, 244, 1);
 
-  final Map notAllowedAcount = {
+  final Map notAllowedAcountError = {
     'color' : errorColor,
     'icon' : Icons.close,
     'title': 'Error',
     'message': 'Sólo se permiten cuentas institucionales'
+  };
+
+  final Map confidentUserWarning = {
+    'color' : warningColor,
+    'icon' : Icons.warning,
+    'title': 'Precaución',
+    'message': 'Los usuarios de confianza pueden salir con tu vehículo'
   };
 
 }
