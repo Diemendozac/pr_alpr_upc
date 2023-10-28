@@ -1,5 +1,4 @@
 
-
 import 'package:pr_alpr_upc/src/models/vehicle.dart';
 
 class VehicleProvider {

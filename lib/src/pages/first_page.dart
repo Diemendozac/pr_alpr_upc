@@ -12,7 +12,7 @@ class FirstPage extends StatelessWidget {
   Widget _createWidget(BuildContext context) {
 
     return Center(
-      child: Text('Parkir.in', style: Theme.of(context).textTheme.titleLarge),
+      child: Text('Aplicación', style: Theme.of(context).textTheme.titleLarge),
     );
 
   }

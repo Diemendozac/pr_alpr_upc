@@ -34,7 +34,7 @@ class LoginPage extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                     textAlign: TextAlign.left),
                 Text(
-                  'SmartParking',
+                  'Aplicación',
                   style: Theme.of(context).textTheme.titleMedium,
                   textAlign: TextAlign.left,
                 ),
@@ -47,7 +47,7 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _createBody(BuildContext context) {
-    TemplateButtons templateButtons = TemplateButtons();
+    TemplateButtons templateButtons = TemplateButtons.instance;
     AuthService authService = AuthService.instance;
 
     return Center(

@@ -6,12 +6,14 @@ const lightPrimaryColor = Color.fromRGBO(86, 125, 244, 1);
 const lightOnPrimaryColor = Colors.white;
 const lightSecundaryColor = Color.fromRGBO(255, 49, 123, 1);
 const lightOnSecundaryColor = Colors.white;
-const lightFocusColor = Color.fromRGBO(255, 49, 123, 0.6);
+const lightFocusColor = Color.fromRGBO(250, 105, 158, 1.0);
 const lightErrorColor = Color.fromRGBO(244, 67, 54, 1);
 const lightOnErrorColor = Colors.white;
 const lightSurfaceColor = Color.fromRGBO(243, 246, 255, 1);
 const lightOnSurfaceColor = Color.fromRGBO(103, 113, 145, 1);
 const lightTitleColor = Color.fromRGBO(25, 35, 66, 1);
+const lightCardColor = Color.fromRGBO(58, 130, 225, 1); // Puedes ajustar los valores RGB según tu preferencia
+
 
 const darkBackgroundColor = Color.fromRGBO(16, 22, 41, 1);
 const darkOnBackgroundColor = Colors.white;
@@ -29,6 +31,7 @@ const darkTitleColor = Colors.white;
 ThemeData lightTheme = ThemeData(
   useMaterial3: true,
   fontFamily: 'Lato',
+  focusColor: lightCardColor,
   colorScheme: const ColorScheme(
     brightness: Brightness.light,
     background: lightBackgroundColor,

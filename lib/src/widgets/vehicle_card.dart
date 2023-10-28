@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pr_alpr_upc/src/models/vehicle.dart';
-import 'package:pr_alpr_upc/src/utils/template_brand_images.dart';
+import 'package:pr_alpr_upc/src/widgets/forms.dart';
 
 class VehicleCard extends StatelessWidget {
   final Vehicle _vehicle;
@@ -9,110 +9,111 @@ class VehicleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    print(_vehicle.licensePlate);
 
     return Container(
       padding: const EdgeInsets.all(10),
       child: Card(
-        color: Theme.of(context).colorScheme.surface,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildVehicleCharacteristics(context),
-            _buildCardStylesheet(height * 0.136)
-          ],
-        ),
+        color: Theme.of(context).colorScheme.primary,
+        child: _buildCardContent(context),
       ),
     );
   }
 
-  Widget _buildVehicleCharacteristics(BuildContext context) {
+  Widget _buildCardContent(BuildContext context) {
+
+    final TemplateForms templateForms = TemplateForms();
+
+    TextStyle? titleStyle = Theme.of(context).textTheme.titleSmall?.copyWith(
+          color: Theme.of(context).colorScheme.onPrimary,
+        );
+
+    TextStyle? subtitleStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: Theme.of(context).colorScheme.onPrimary,
+        );
+
+    Color iconsColor = Theme.of(context).colorScheme.onPrimary;
+
     return Container(
-      margin: const EdgeInsets.only(top: 20, left: 20, bottom: 20),
+      height: 250,
+      width: 125,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: BorderRadius.circular(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.sports_motorsports_sharp,
-                  size: 32, color: Theme.of(context).colorScheme.onSurface),
-              const SizedBox(
-                width: 10,
-              ),
-              Text(_vehicle.licensePlate.toString(),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              Icon(Icons.sports_motorsports, color: iconsColor),
+              GestureDetector(
+                  child: Icon(Icons.edit, color: iconsColor,),
+                onTap: () {templateForms.vehicleForm(context);},
+              )
             ],
           ),
-          Text(
-            'FZ-150',
-            style: Theme.of(context).textTheme.bodyLarge,
+          Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'ABC-23C',
+                  style: titleStyle,
+                ),
+                Text(
+                  'Yamaha FZ-150',
+                  style: subtitleStyle,
+                )
+              ],
+            ),
           ),
-          _createDetails(context)
+          _buildVehicleStats(context),
         ],
       ),
     );
   }
 
-  Widget _buildCardStylesheet(double height) {
-    return Container(
-      decoration: const BoxDecoration(
-
-      ),
-      alignment: Alignment.center,
-      //margin: EdgeInsets.only(right: 7.5),
-      height: height,
-      child: getBrandImage('pulsar'),
-    );
-  }
-
-  Widget _createDetails(BuildContext context) {
-    Color statsBackground = Theme.of(context).colorScheme.onError;
-
-    TextStyle? statsStyle = Theme.of(context)
-        .textTheme
-        .bodyMedium
-        ?.copyWith(color: Theme.of(context).colorScheme.primary);
+  Widget _buildVehicleStats(BuildContext context) {
+    TextStyle? statsStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
+        color: Theme.of(context).colorScheme.primary,
+        fontWeight: FontWeight.w200);
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            padding: const EdgeInsets.all(7.5),
-            decoration: BoxDecoration(
-                color: statsBackground, shape: BoxShape.rectangle),
-            child: Text('150cc', style: statsStyle),
+        Container(
+          decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onError,
+              borderRadius: BorderRadius.circular(20)),
+          padding: const EdgeInsets.all(7.5),
+          child: Text(
+            '2022',
+            style: statsStyle,
           ),
         ),
-        const SizedBox(
-          width: 5,
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            padding: const EdgeInsets.all(7.5),
+        Container(
             decoration: BoxDecoration(
-                color: statsBackground, shape: BoxShape.rectangle),
+                color: Theme.of(context).colorScheme.onError,
+                borderRadius: BorderRadius.circular(20)),
+            padding: const EdgeInsets.all(7.5),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Color: ', style: statsStyle),
+                Text(
+                  'Color: ',
+                  style: statsStyle,
+                ),
                 Container(
                   height: 16,
                   width: 16,
                   decoration: BoxDecoration(
-                      color: Colors.deepPurple,
-                      borderRadius: BorderRadius.circular(20)),
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.red),
                 )
               ],
-            ),
-          ),
-        )
+            ))
       ],
     );
   }

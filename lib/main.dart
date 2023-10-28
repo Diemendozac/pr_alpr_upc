@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pr_alpr_upc/firebase_options.dart';
 import 'package:pr_alpr_upc/src/pages/alert_page.dart';
+import 'package:pr_alpr_upc/src/pages/confidence_cicrcle_page.dart';
 import 'package:pr_alpr_upc/src/pages/home_page.dart';
 import 'package:pr_alpr_upc/src/pages/login_page.dart';
 import 'package:pr_alpr_upc/src/pages/initial_page.dart';
@@ -49,7 +50,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       title: 'Material App',
-      initialRoute: 'initial',
+      initialRoute: 'home',
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: _themeManager.themeMode,
@@ -59,6 +60,7 @@ class _MyAppState extends State<MyApp> {
         'login': (BuildContext context) => const LoginPage(),
         'alert': (BuildContext context) => const AlertPage(),
         'home' : (BuildContext context) => const HomePage(),
+        'confidence_circle' : (BuildContext context) => const ConfidenceCirclePage(),
         'notification' : (BuildContext context) => const NotificationPage()
 
       },
