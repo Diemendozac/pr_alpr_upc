@@ -60,7 +60,7 @@ class LoginPage extends StatelessWidget {
           height: 10,
         ),
         templateButtons.createSecundaryButton('Sign In', () {
-          authService.handleSignOut();
+          authService.handleLogIn(context);
         }, context, 0.9),
         const SizedBox(
           height: 30,

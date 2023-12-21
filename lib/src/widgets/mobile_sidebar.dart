@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pr_alpr_upc/src/services/locar_storage.dart';
 import 'package:pr_alpr_upc/src/theme/theme_manager.dart';
 
 class MobileSideBar extends StatelessWidget {
@@ -94,10 +95,10 @@ class MobileSideBar extends StatelessWidget {
         children: [
           _buildUserData(titleStyle, subtitleStyle, context),
           IconButton(
-              onPressed: () => themeManager.toogleTheme(!(themeManager.themeMode == ThemeMode.dark)),
-              icon: themeManager.themeMode == ThemeMode.dark
-                  ? const Icon(Icons.dark_mode)
-                  : const Icon(Icons.light_mode))
+              onPressed: () => themeManager.toogleTheme(!LocalStorage.prefs.getBool("themeMode")!),
+              icon: LocalStorage.prefs.getBool("themeMode")!
+                  ? const Icon(Icons.light_mode)
+                  : const Icon(Icons.dark_mode))
         ],
       ),
     );
@@ -115,13 +116,14 @@ class MobileSideBar extends StatelessWidget {
   }
 
   Widget _buildUserImage() {
+    String url = LocalStorage.prefs.getString("userPhotoUrl") ?? "https://cdn.wallpapersafari.com/62/8/bc4hqG.jpg";
     return Container(
       margin: const EdgeInsets.only(right: 10),
-      child: const ClipOval(
+      child: ClipOval(
         child: FadeInImage(
-          placeholder: AssetImage('assets/img/alert/background-alert-top.png'),
+          placeholder: const AssetImage('assets/img/alert/background-alert-top.png'),
           image:
-              NetworkImage('https://cdn.wallpapersafari.com/62/8/bc4hqG.jpg'),
+              NetworkImage(url),
           fit: BoxFit.cover,
           height: 50,
           width: 50,

@@ -1,28 +1,24 @@
 
+import 'package:flutter/material.dart';
 import 'package:pr_alpr_upc/src/models/vehicle.dart';
+import 'package:pr_alpr_upc/src/services/vehicle_service.dart';
 
-class VehicleProvider {
+class VehicleProvider extends ChangeNotifier {
+  final VehicleService vehicleService = VehicleService();
+  List<Vehicle> vehicles = [];
 
-  final List<Map<String, String>> _userVehicles = [
-    {
-      'licensePlate' : 'WCZ-32A',
-      'brand' : 'Suzuki',
-      'engine' : '200cc',
-      'color' : 'black'
-    },
-    {
-      'licensePlate' : 'ASD-56A',
-      'brand' : 'Honda',
-      'engine' : '200cc',
-      'color' : 'red'
-    },
-    {
-      'licensePlate' : 'QWE-431',
-      'brand' : 'Pulsar',
-      'engine' : '200cc',
-      'color' : 'green'
-    },
-  ];
+  VehicleProvider() {
+    this.vehicles = [];
+  }
 
-  List<Vehicle> get userVehicles => Vehicles.fromJsonList(_userVehicles).items;
+  Future<void> getVehicles() async {
+    // Realiza la consulta a la API
+    List<Vehicle> response = await vehicleService.getVehicles();
+
+    // Asigna los resultados a la propiedad de la clase
+    this.vehicles = response;
+
+    // Notifica a los escuchantes de que los datos han cambiado
+    notifyListeners();
+  }
 }

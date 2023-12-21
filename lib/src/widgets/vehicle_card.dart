@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pr_alpr_upc/src/models/vehicle.dart';
-import 'package:pr_alpr_upc/src/widgets/forms.dart';
+import 'package:pr_alpr_upc/src/widgets/vehicle_form.dart';
 
 class VehicleCard extends StatelessWidget {
   final Vehicle _vehicle;
@@ -11,9 +11,8 @@ class VehicleCard extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(8),
       child: Card(
-        color: Theme.of(context).colorScheme.primary,
         child: _buildCardContent(context),
       ),
     );
@@ -21,7 +20,7 @@ class VehicleCard extends StatelessWidget {
 
   Widget _buildCardContent(BuildContext context) {
 
-    final TemplateForms templateForms = TemplateForms();
+    final VehicleForm vehicleForm = VehicleForm();
 
     TextStyle? titleStyle = Theme.of(context).textTheme.titleSmall?.copyWith(
           color: Theme.of(context).colorScheme.onPrimary,
@@ -39,7 +38,8 @@ class VehicleCard extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,
-          borderRadius: BorderRadius.circular(20)),
+          borderRadius: BorderRadius.circular(20)
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,7 +51,7 @@ class VehicleCard extends StatelessWidget {
               Icon(Icons.sports_motorsports, color: iconsColor),
               GestureDetector(
                   child: Icon(Icons.edit, color: iconsColor,),
-                onTap: () {templateForms.vehicleForm(context);},
+                onTap: () {vehicleForm.showForm(context);},
               )
             ],
           ),

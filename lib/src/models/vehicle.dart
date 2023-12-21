@@ -1,40 +1,35 @@
-class Vehicles {
-
-  List<Vehicle> items = [];
-
-  Vehicles();
-
-  Vehicles.fromJsonList( List<dynamic> jsonList  ) {
-
-    for ( var item in jsonList  ) {
-      final vehicle = Vehicle.fromJsonMap(item);
-      items.add( vehicle );
-    }
-
-  }
-
-}
-
 class Vehicle {
-  String? licensePlate;
-  String? brand;
-  String? engine;
-  String? color;
+  String placa;
+  String marca;
+  String linea;
+  String color;
+  bool isOwner;
 
   Vehicle({
-    required this.licensePlate,
-    required this.brand,
-    required this.engine,
+    required this.placa,
+    required this.marca,
+    required this.linea,
     required this.color,
+    required this.isOwner,
   });
 
-  Vehicle.fromJsonMap( Map<String, dynamic> json ) {
-
-    licensePlate    = json['license_plate'];
-    brand           = json['brand'];
-    engine          = json['engine'];
-    color           = json['color'];
-
+  factory Vehicle.fromJson(Map<String, dynamic> json) {
+    return Vehicle(
+      placa: json["placa"],
+      marca: json["marca"],
+      linea: json["linea"],
+      color: json["color"],
+      isOwner: json["isOwner"],
+    );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      "placa": placa,
+      "marca": marca,
+      "linea": linea,
+      "color": color,
+      "isOwner": isOwner,
+    };
+  }
 }

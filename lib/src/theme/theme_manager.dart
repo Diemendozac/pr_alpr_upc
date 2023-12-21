@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:pr_alpr_upc/src/services/locar_storage.dart';
 
 class ThemeManager with ChangeNotifier{
 
@@ -14,6 +15,7 @@ class ThemeManager with ChangeNotifier{
   toogleTheme(bool isDark) {
 
     _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    LocalStorage.prefs.setBool("themeMode", isDark);
     notifyListeners();
 
   }

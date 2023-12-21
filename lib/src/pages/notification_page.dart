@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pr_alpr_upc/src/providers/user_provider.dart';
+import 'package:pr_alpr_upc/src/providers/notification_provider.dart';
 
 
 class NotificationPage extends StatelessWidget {
@@ -47,7 +47,7 @@ class NotificationPage extends StatelessWidget {
   }
 
   Widget _createNotifications(BuildContext context) {
-    UserProvider userProvider = UserProvider();
+    NotificationProvider userProvider = NotificationProvider();
     List<Map<String, String>> notifications =
         userProvider.getUserNotifications();
 
