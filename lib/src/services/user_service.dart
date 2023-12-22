@@ -45,7 +45,7 @@ class UserService {
 
   }
 
-  Future<bool> loginUser(String email, String password) async {
+  Future<dynamic> loginUser(String email, String password) async {
 
     var response = await http.post(
       Uri.parse('$baseUrl/authenticate'),
@@ -58,8 +58,7 @@ class UserService {
             'password': password,
           }),
     );
-    print(await response.body);
-    return response.statusCode == 200 ? true : false;
+    return response;
 
   }
 }

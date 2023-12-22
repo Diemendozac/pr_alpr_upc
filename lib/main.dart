@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Material App',
-      initialRoute: 'home',
+      initialRoute: 'login',
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: getTheme(),

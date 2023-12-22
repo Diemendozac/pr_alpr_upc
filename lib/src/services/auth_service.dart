@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pr_alpr_upc/src/providers/token_provider.dart';
 import 'package:pr_alpr_upc/src/services/user_service.dart';
 import 'package:pr_alpr_upc/src/utils/template_alert_constants.dart';
 
@@ -15,6 +16,7 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final TemplateAlerts templateAlerts = TemplateAlerts.instance;
   final UserService userService = UserService();
+  final TokenProvider tokenProvider = TokenProvider();
 
   Future<void> handleSignIn(BuildContext context) async {
 
@@ -58,7 +60,7 @@ class AuthService {
           return;
         }
 
-        await userService.loginUser(
+        tokenProvider.saveToken(
             googleUser.email,
             googleUser.id,
         );
