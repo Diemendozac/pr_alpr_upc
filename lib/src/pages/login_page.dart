@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pr_alpr_upc/src/pages/reverse_background_page.dart';
-import 'package:pr_alpr_upc/src/services/auth_service.dart';
+import 'package:pr_alpr_upc/src/services/google_auth_service.dart';
 import 'package:pr_alpr_upc/src/widgets/buttons.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth_state.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -48,19 +51,21 @@ class LoginPage extends StatelessWidget {
 
   Widget _createBody(BuildContext context) {
     TemplateButtons templateButtons = TemplateButtons.instance;
-    AuthService authService = AuthService.instance;
+    GoogleAuthService authService = GoogleAuthService.instance;
 
     return Center(
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         const Expanded(child: SizedBox()),
         templateButtons.createPrimaryButton('Login', () {
-          authService.handleSignIn(context);
+          authService.handleSignUp(context);
         }, context, 0.9),
         const SizedBox(
           height: 10,
         ),
-        templateButtons.createSecundaryButton('Sign In', () {
-          authService.handleLogIn(context);
+        templateButtons.createSecundaryButton('Sign In', () async {
+          bool isAuthenticated = await authService.handleLogIn(context);
+          final authState = context.read<AuthState>();
+          authState.setLoggedIn(isAuthenticated);
         }, context, 0.9),
         const SizedBox(
           height: 30,

@@ -6,12 +6,10 @@ import 'dart:convert';
 class VehicleService {
   static String baseUrl = "https://localhost:8080";
 
-  Future<List<Vehicle>> getVehicles() async {
-    // Realiza la consulta a la API
+  Future<List<Vehicle>> getAllAssociatedVehicles() async {
 
     var response = await http.get(Uri.parse("$baseUrl/vehicle"));
 
-    // Comprueba el estado de la respuesta
     if (response.statusCode != 200) {
       throw Exception("Error al obtener los usuarios");
     }

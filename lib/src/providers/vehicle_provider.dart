@@ -13,7 +13,7 @@ class VehicleProvider extends ChangeNotifier {
 
   Future<void> getVehicles() async {
     // Realiza la consulta a la API
-    List<Vehicle> response = await vehicleService.getVehicles();
+    List<Vehicle> response = await vehicleService.getAllAssociatedVehicles();
 
     // Asigna los resultados a la propiedad de la clase
     this.vehicles = response;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pr_alpr_upc/src/providers/vehicle_provider.dart';
+import 'package:pr_alpr_upc/src/providers/user_provider.dart';
 import 'package:pr_alpr_upc/src/widgets/vehicle_form.dart';
 import 'package:pr_alpr_upc/src/widgets/mobile_sidebar.dart';
 import 'package:pr_alpr_upc/src/widgets/tab_controller.dart';
@@ -8,10 +8,15 @@ import 'package:pr_alpr_upc/src/widgets/vehicle_card.dart';
 import '../models/vehicle.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+
+  HomePage({super.key});
+  final UserProvider userProvider = UserProvider();
 
   @override
   Widget build(BuildContext context) {
+
+
+    userProvider.findLoggedInUser();
     TextStyle? vehiclesTitle =
         Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurface,
@@ -47,7 +52,7 @@ class HomePage extends StatelessWidget {
 
   Widget _buildVehiclePageView(BuildContext context) {
 
-    List<Vehicle> vehicles = VehicleProvider().vehicles;
+    List<Vehicle> vehicles = userProvider.vehicles!;
     List<VehicleCard> vehicleCards = vehicles.map((vehicle) => VehicleCard(vehicle)).toList();
     List<dynamic> userCards = [...vehicleCards];
     userCards.add(_buildAddVehicleCard(context));

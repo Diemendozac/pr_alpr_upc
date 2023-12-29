@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pr_alpr_upc/src/services/google_auth_service.dart';
 import 'package:pr_alpr_upc/src/services/locar_storage.dart';
 import 'package:pr_alpr_upc/src/theme/theme_manager.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth_state.dart';
 
 class MobileSideBar extends StatelessWidget {
   const MobileSideBar({super.key});
@@ -61,7 +65,10 @@ class MobileSideBar extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: GestureDetector(
               onTap: () {
-                print('Log out');
+                GoogleAuthService authService = GoogleAuthService.instance;
+                authService.eraseUserData();
+                final authState = context.read<AuthState>();
+                authState.logOutUser();
               },
               child: Row(
                 children: [

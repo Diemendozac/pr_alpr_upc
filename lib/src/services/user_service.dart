@@ -1,26 +1,11 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '../models/user.dart';
 
 class UserService {
   static String baseUrl = "http://ec2-18-231-181-27.sa-east-1.compute.amazonaws.com:8080";
-
-  Future<User>getUser() async {
-    // Realiza la consulta a la API
-
-    var response = await http.get(Uri.parse("$baseUrl/users"));
-
-    // Comprueba el estado de la respuesta
-    if (response.statusCode != 200) {
-      throw Exception("Error al obtener los usuarios");
-    }
-
-    // Decodifica los datos de la respuesta
-    User user = User.fromJson(jsonDecode(response.body).map((c) => User.fromJson(c)));
-
-    return user;
-  }
+  FlutterSecureStorage _storage = FlutterSecureStorage();
 
   Future<bool> saveUser(String email, String password, String name, String? photo ) async {
 
@@ -59,6 +44,19 @@ class UserService {
           }),
     );
     return response;
+  }
 
+  Future<dynamic> findAllUserData() async {
+
+    String? token = await _storage.read(key: 'token');
+    if(token == null) return null;
+    var response = await http.get(
+      Uri.parse('$baseUrl/user/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+    return response;
   }
 }

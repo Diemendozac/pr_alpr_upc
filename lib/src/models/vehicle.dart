@@ -1,33 +1,37 @@
 class Vehicle {
-  String placa;
-  String marca;
-  String linea;
-  String color;
+  String plate;
+  String brand;
+  String line;
+  int model;
+  String? color;
   bool isOwner;
 
   Vehicle({
-    required this.placa,
-    required this.marca,
-    required this.linea,
+    required this.plate,
+    required this.brand,
+    required this.line,
+    required this.model,
     required this.color,
     required this.isOwner,
   });
 
   factory Vehicle.fromJson(Map<String, dynamic> json) {
     return Vehicle(
-      placa: json["placa"],
-      marca: json["marca"],
-      linea: json["linea"],
+      plate: json["plate"],
+      brand: json["brand"],
+      line: json["line"],
+      model: json["model"],
       color: json["color"],
-      isOwner: json["isOwner"],
+      isOwner: json["owner"],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      "placa": placa,
-      "marca": marca,
-      "linea": linea,
+      "plate": plate,
+      "brand": brand,
+      "line": line,
+      "model": model,
       "color": color,
       "isOwner": isOwner,
     };

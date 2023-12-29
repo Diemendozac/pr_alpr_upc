@@ -1,24 +1,26 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pr_alpr_upc/src/providers/token_provider.dart';
 import 'package:pr_alpr_upc/src/services/user_service.dart';
 import 'package:pr_alpr_upc/src/utils/template_alert_constants.dart';
 
-class AuthService {
+class GoogleAuthService {
 
-  AuthService._();
+  GoogleAuthService._();
 
-  static AuthService instance = AuthService._();
+  static GoogleAuthService instance = GoogleAuthService._();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final TemplateAlerts templateAlerts = TemplateAlerts.instance;
   final UserService userService = UserService();
   final TokenProvider tokenProvider = TokenProvider();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  Future<void> handleSignIn(BuildContext context) async {
+  Future<void> handleSignUp(BuildContext context) async {
 
     try{
       GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
@@ -47,23 +49,24 @@ class AuthService {
 
   }
 
-  Future<void> handleLogIn(BuildContext context) async {
+  Future<bool> handleLogIn(BuildContext context) async {
 
     try{
       GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-
 
       if(googleUser != null) {
         if(!googleUser.email.endsWith('unicesar.edu.co')){
           handleSignOut();
           if(context.mounted) Navigator.pushNamed(context, 'alert', arguments: templateAlerts.notAllowedAcountError );
-          return;
+          return false;
         }
-
-        tokenProvider.saveToken(
+        String? token = await tokenProvider.saveToken(
             googleUser.email,
             googleUser.id,
         );
+        if( token == null) return false;
+        await _storage.write(key: 'token', value: token);
+        return true;
 
       }
     } catch (e) {
@@ -71,6 +74,7 @@ class AuthService {
     } finally {
       handleSignOut();
     }
+    return false;
 
   }
 
@@ -81,8 +85,10 @@ class AuthService {
     } catch(e) {
       print('Error al salir: $e');
     }
-
   }
 
+  Future<void> eraseUserData() async {
+    await _storage.delete(key: 'token');
+  }
 
 }
