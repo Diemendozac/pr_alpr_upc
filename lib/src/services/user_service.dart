@@ -5,7 +5,7 @@ import 'dart:convert';
 
 class UserService {
   static String baseUrl = "http://ec2-18-231-181-27.sa-east-1.compute.amazonaws.com:8080";
-  FlutterSecureStorage _storage = FlutterSecureStorage();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   Future<bool> saveUser(String email, String password, String name, String? photo ) async {
 
@@ -25,7 +25,6 @@ class UserService {
         'confidenceCircle': []
       }),
     );
-    print(await response.body);
     return response.statusCode == 200 ? true : false;
 
   }
@@ -47,7 +46,6 @@ class UserService {
   }
 
   Future<dynamic> findAllUserData() async {
-
     String? token = await _storage.read(key: 'token');
     if(token == null) return null;
     var response = await http.get(

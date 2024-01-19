@@ -1,11 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:pr_alpr_upc/src/services/vehicle_service.dart';
 import 'package:pr_alpr_upc/src/utils/form_constants.dart';
 
 import '../models/vehicle.dart';
 
 class VehicleForm {
   final _formKey = GlobalKey<FormState>();
+  final VehicleService vehicleService = VehicleService();
+  late String _plate;
+  late String _line;
+  late String _brand;
+  late int _model;
+  late String _color;
+
   final FormConstants formConstants = FormConstants();
+
+  void setColor(String value) {
+    _color = value;
+  }
+
+  void setModel(String value) {
+    _model = int.parse(value);
+  }
+
+  void setBrand(String value) {
+    _brand = value;
+  }
+
+  void setLine(String value) {
+    _line = value;
+  }
+
+  void setPlate(String value) {
+    _plate = value.toUpperCase();
+  }
 
   Future<void> showForm(BuildContext context, [Vehicle? vehicle]) async {
     Color primaryColor = Theme.of(context).colorScheme.primary;
@@ -16,8 +44,8 @@ class VehicleForm {
     await showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
-          scrollable: true,
-              title: const Text('Modifica tu vehículo'),
+              scrollable: true,
+              title: buildFormTitle(vehicle, context),
               titlePadding: const EdgeInsets.only(left: 30, top: 20),
               content: Stack(
                 clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -29,24 +57,26 @@ class VehicleForm {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          _buildTextFormInput('Placa', context),
-                          _buildTextFormInput('Línea', context),
+                          _buildTextFormInput('Placa', context,
+                              formConstants.validatePlate, setPlate),
+                          _buildTextFormInput('Línea', context,
+                              formConstants.validateSelectedValue, setLine),
                           _buildPaddingWidget(dropdownButtonFormField(
-                              context, brandOptions, 'Marca')),
+                              context, brandOptions, 'Marca', setBrand)),
                           _buildPaddingWidget(Row(
                             children: [
                               Expanded(
-                                  child: dropdownButtonFormField(
-                                      context, modelOptions, 'Modelo')),
+                                  child: dropdownButtonFormField(context,
+                                      modelOptions, 'Modelo', setModel)),
                               const SizedBox(
                                 width: 10,
                               ),
                               Expanded(
-                                  child: dropdownButtonFormField(
-                                      context, brandOptions, 'Color')),
+                                  child: dropdownButtonFormField(context,
+                                      brandOptions, 'Color', setColor)),
                             ],
                           )),
-                          _buildFormButton(primaryColor, 'Editar Vehículo'),
+                          _buildFormButton(primaryColor, vehicle == null),
                         ],
                       ),
                     ),
@@ -56,9 +86,37 @@ class VehicleForm {
             ));
   }
 
-  DropdownButtonFormField<String> dropdownButtonFormField(
-      BuildContext context, List<String> options, String placeHolder) {
+  Widget buildFormTitle(Vehicle? vehicle, BuildContext context) {
+
+    bool vehicleIsNull = vehicle == null;
+    Widget createTitle = const Text('Añade tu vehículo');
+    if (vehicleIsNull) return createTitle;
+
+    Widget modifyTitle = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Text('Modifica tu vehículo'),
+        IconButton(
+            onPressed: () {
+              vehicleService.deleteVehicle(vehicle.plate);
+            },
+            icon: Icon(
+              Icons.delete,
+              color: Theme.of(context).colorScheme.secondary,
+            ))
+      ],
+    );
+
+    return modifyTitle;
+  }
+
+  DropdownButtonFormField<String> dropdownButtonFormField(BuildContext context,
+      List<String> options, String placeHolder, Function(String) setter) {
     return DropdownButtonFormField(
+        onSaved: (String? value) {
+          setter(value!);
+        },
         decoration: _buildInputDecoration(context, placeHolder),
         validator: (value) {
           return formConstants.validateSelectedValue(value);
@@ -74,28 +132,16 @@ class VehicleForm {
         onChanged: (opt) => print(opt));
   }
 
-  Padding _buildFormButton(Color primaryColor, String text) {
-    ElevatedButton formButton = ElevatedButton(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(primaryColor),
-        foregroundColor: MaterialStateProperty.all(Colors.white),
-      ),
-      onPressed: () {
-        if (_formKey.currentState!.validate()) {
-          _formKey.currentState!.save();
-          print('Ok');
-        }
-      },
-      child: Text(text),
-    );
-
-    return _buildPaddingWidget(formButton);
-  }
-
-  Widget _buildTextFormInput(String label, BuildContext context) {
+  Widget _buildTextFormInput(String label, BuildContext context,
+      Function(String?) validator, Function(String) setter) {
     return _buildPaddingWidget(TextFormField(
+        onSaved: (String? value) {
+          setter(value!);
+        },
         decoration: _buildInputDecoration(context, label),
-        validator: (value) {return formConstants.validatePlate(value);}));
+        validator: (value) {
+          return validator(value);
+        }));
   }
 
   Padding _buildPaddingWidget(Widget widget) {
@@ -128,5 +174,34 @@ class VehicleForm {
           borderRadius: inputBorders,
           borderSide: BorderSide(color: errorColor)),
     );
+  }
+
+  Padding _buildFormButton(Color primaryColor, bool isSave) {
+    String text = isSave ? 'Añade' : 'Modifica';
+    ElevatedButton formButton = ElevatedButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(primaryColor),
+        foregroundColor: MaterialStateProperty.all(Colors.white),
+      ),
+      onPressed: () async {
+        if (_formKey.currentState!.validate()) {
+          _formKey.currentState!.save();
+          Vehicle requestVehicle = Vehicle(
+              brand: _brand,
+              color: _color,
+              line: _line,
+              model: _model,
+              plate: _plate,
+              isOwner: true);
+          bool? httpResponse = isSave ? await vehicleService.saveVehicle(requestVehicle) :
+              await vehicleService.updateVehicle(requestVehicle);
+          print(httpResponse);
+        }
+
+      },
+      child: Text('$text Vehículo'),
+    );
+
+    return _buildPaddingWidget(formButton);
   }
 }

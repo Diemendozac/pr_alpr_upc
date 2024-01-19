@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pr_alpr_upc/src/models/vehicle.dart';
+import 'package:pr_alpr_upc/src/services/vehicle_service.dart';
 import 'package:pr_alpr_upc/src/widgets/vehicle_form.dart';
 
 class VehicleCard extends StatelessWidget {
   final Vehicle _vehicle;
+  final VehicleService _vehicleService = VehicleService();
 
-  const VehicleCard(this._vehicle, {super.key});
+  VehicleCard(this._vehicle, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,7 @@ class VehicleCard extends StatelessWidget {
               Icon(Icons.sports_motorsports, color: iconsColor),
               GestureDetector(
                   child: Icon(Icons.edit, color: iconsColor,),
-                onTap: () {vehicleForm.showForm(context);},
+                onTap: () {vehicleForm.showForm(context, _vehicle);},
               )
             ],
           ),
@@ -60,11 +62,11 @@ class VehicleCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'ABC-23C',
+                  _vehicle.plate,
                   style: titleStyle,
                 ),
                 Text(
-                  'Yamaha FZ-150',
+                  _vehicle.line,
                   style: subtitleStyle,
                 )
               ],
@@ -90,7 +92,7 @@ class VehicleCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(20)),
           padding: const EdgeInsets.all(7.5),
           child: Text(
-            '2022',
+            _vehicle.model.toString(),
             style: statsStyle,
           ),
         ),
@@ -102,7 +104,7 @@ class VehicleCard extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  'Color: ',
+                  _vehicle.color ?? 'Color: ',
                   style: statsStyle,
                 ),
                 Container(

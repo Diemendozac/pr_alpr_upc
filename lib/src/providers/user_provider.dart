@@ -25,13 +25,10 @@ class UserProvider extends ChangeNotifier {
       Map<String, dynamic> mapData = jsonDecode(response.body);
       email = mapData["email"]!;
       name = mapData["name"]!;
-      vehicles = mapData["associatedVehicles"]!
+      vehicles = mapData["associatedVehicles"]
           .map<Vehicle>((map) => Vehicle.fromJson(map))
-          .toList();
-      confidenceUsers = mapData["confidenceCircle"]!
-          .map<Vehicle>((map) => ConfidenceUser.fromJson(map))
-          .toList();
-      confidenceUsers = mapData["confidenceCircle"] as List<ConfidenceUser>;
+          .toList() ?? [];
+      confidenceUsers = [];
       urlPhoto = "";
 
       tokenExpirationDate = DateTime.now().add(const Duration(minutes: 30));

@@ -1,6 +1,7 @@
 import 'package:auth_state_manager/auth_state_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:pr_alpr_upc/src/providers/auth_state.dart';
+import 'package:pr_alpr_upc/src/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:pr_alpr_upc/firebase_options.dart';
@@ -55,6 +56,9 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(
           create: (context) => AuthState(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => UserProvider(),
         )
       ],
       child: MaterialApp(
