@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
               widthFactor: 0.9,
               child: Text('Círculo de confianza',
                   style: vehiclesTitle, textAlign: TextAlign.left)),
-          const UserTabContainer()
+          UserTabContainer()
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -51,9 +51,9 @@ class HomePage extends StatelessWidget {
   Widget _buildVehiclePageView(BuildContext context) {
 
     final userProvider = Provider.of<UserProvider>(context);
-    if(userProvider.email == null) userProvider.findLoggedInUser();
+    if(userProvider.getEmail() == null) userProvider.findLoggedInUser();
 
-    List<Vehicle> vehicles = userProvider.vehicles ?? [];
+    List<Vehicle> vehicles = userProvider.getVehicles() ?? [];
     List<VehicleCard> vehicleCards = vehicles.map((vehicle) => VehicleCard(vehicle)).toList();
     List<dynamic> userCards = [...vehicleCards];
     userCards.add(_buildAddVehicleCard(context));

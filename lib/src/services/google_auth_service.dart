@@ -14,7 +14,7 @@ class GoogleAuthService {
   static GoogleAuthService instance = GoogleAuthService._();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(clientId: '718421263049-cukdqhhc8u34l5bb251jet8nql7aa7si.apps.googleusercontent.com');
   final TemplateAlerts templateAlerts = TemplateAlerts.instance;
   final UserService userService = UserService();
   final TokenProvider tokenProvider = TokenProvider();

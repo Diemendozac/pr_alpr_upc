@@ -58,22 +58,22 @@ class VehicleForm {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           _buildTextFormInput('Placa', context,
-                              formConstants.validatePlate, setPlate),
+                              formConstants.validatePlate, setPlate, vehicle?.plate, vehicle == null),
                           _buildTextFormInput('Línea', context,
-                              formConstants.validateSelectedValue, setLine),
-                          _buildPaddingWidget(dropdownButtonFormField(
-                              context, brandOptions, 'Marca', setBrand)),
+                              formConstants.validateSelectedValue, setLine, vehicle?.line, true),
+                          _buildPaddingWidget(buildDropdownButtonFormField(
+                              context, brandOptions, 'Marca', setBrand, vehicle?.brand)),
                           _buildPaddingWidget(Row(
                             children: [
                               Expanded(
-                                  child: dropdownButtonFormField(context,
-                                      modelOptions, 'Modelo', setModel)),
+                                  child: buildDropdownButtonFormField(context,
+                                      modelOptions, 'Modelo', setModel, vehicle?.model.toString())),
                               const SizedBox(
                                 width: 10,
                               ),
                               Expanded(
-                                  child: dropdownButtonFormField(context,
-                                      brandOptions, 'Color', setColor)),
+                                  child: buildDropdownButtonFormField(context,
+                                      brandOptions, 'Color', setColor, vehicle?.color)),
                             ],
                           )),
                           _buildFormButton(primaryColor, vehicle == null),
@@ -111,13 +111,15 @@ class VehicleForm {
     return modifyTitle;
   }
 
-  DropdownButtonFormField<String> dropdownButtonFormField(BuildContext context,
-      List<String> options, String placeHolder, Function(String) setter) {
+  DropdownButtonFormField<String> buildDropdownButtonFormField(BuildContext context,
+      List<String> options, String placeHolder, Function(String) setter, String? initialValue) {
+
     return DropdownButtonFormField(
+      value: initialValue,
         onSaved: (String? value) {
           setter(value!);
         },
-        decoration: _buildInputDecoration(context, placeHolder),
+        decoration: formConstants.buildInputDecoration(context, placeHolder),
         validator: (value) {
           return formConstants.validateSelectedValue(value);
         },
@@ -133,12 +135,14 @@ class VehicleForm {
   }
 
   Widget _buildTextFormInput(String label, BuildContext context,
-      Function(String?) validator, Function(String) setter) {
+      Function(String?) validator, Function(String) setter, String? initialVehicleValue, bool setEnabled) {
     return _buildPaddingWidget(TextFormField(
+      initialValue: initialVehicleValue,
+        enabled: setEnabled,
         onSaved: (String? value) {
           setter(value!);
         },
-        decoration: _buildInputDecoration(context, label),
+        decoration: formConstants.buildInputDecoration(context, label),
         validator: (value) {
           return validator(value);
         }));
@@ -148,31 +152,6 @@ class VehicleForm {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: widget,
-    );
-  }
-
-  InputDecoration _buildInputDecoration(BuildContext context, String label) {
-    Color primaryColor = Theme.of(context).colorScheme.primary;
-    Color errorColor = Theme.of(context).colorScheme.error;
-    BorderRadius inputBorders = const BorderRadius.all(Radius.circular(10));
-    TextStyle errorStyle = Theme.of(context)
-        .textTheme
-        .bodySmall!
-        .copyWith(color: errorColor, fontWeight: FontWeight.w100, fontSize: 12);
-
-    return InputDecoration(
-      labelText: label,
-      border: OutlineInputBorder(borderRadius: inputBorders),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: inputBorders,
-        borderSide: BorderSide(
-          color: primaryColor,
-        ),
-      ),
-      errorStyle: errorStyle,
-      errorBorder: OutlineInputBorder(
-          borderRadius: inputBorders,
-          borderSide: BorderSide(color: errorColor)),
     );
   }
 

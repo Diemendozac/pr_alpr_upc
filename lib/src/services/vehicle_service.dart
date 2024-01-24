@@ -5,7 +5,8 @@ import 'dart:convert';
 
 
 class VehicleService {
-  static String baseUrl = "http://ec2-18-231-181-27.sa-east-1.compute.amazonaws.com:8080";
+  //ec2-18-231-181-27.sa-east-1.compute.amazonaws.com
+  static String baseUrl = 'http://ec2-18-231-181-27.sa-east-1.compute.amazonaws.com:8080';
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   Future<List<Vehicle>> getAllAssociatedVehicles() async {

@@ -1,7 +1,7 @@
 class ConfidenceUser {
   String email;
   String name;
-  String urlPhoto;
+  String? urlPhoto;
 
   ConfidenceUser({
     required this.email,

@@ -4,7 +4,8 @@ import 'dart:convert';
 
 
 class UserService {
-  static String baseUrl = "http://ec2-18-231-181-27.sa-east-1.compute.amazonaws.com:8080";
+  //http://ec2-18-231-181-27.sa-east-1.compute.amazonaws.com:8080
+  static String baseUrl = 'http://ec2-18-231-181-27.sa-east-1.compute.amazonaws.com:8080';
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   Future<bool> saveUser(String email, String password, String name, String? photo ) async {

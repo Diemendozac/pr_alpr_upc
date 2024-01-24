@@ -9,29 +9,32 @@ import '../models/confidence_user.dart';
 
 class UserProvider extends ChangeNotifier {
   final UserService userService = UserService();
-  String? email;
-  String? name;
-  List<Vehicle>? vehicles;
-  List<ConfidenceUser>? confidenceUsers;
-  String? urlPhoto;
-  String? token;
-  DateTime? tokenExpirationDate;
+  String? _email;
+  String? _name;
+  List<Vehicle>? _vehicles;
+  List<ConfidenceUser>? _confidenceUsers;
+  String? _urlPhoto;
+  String? _token;
+  DateTime? _tokenExpirationDate;
 
   Future<void> findLoggedInUser() async {
     // Realiza la consulta a la API
     var response = await userService.findAllUserData();
     if (response.statusCode == 200) {
-
       Map<String, dynamic> mapData = jsonDecode(response.body);
-      email = mapData["email"]!;
-      name = mapData["name"]!;
-      vehicles = mapData["associatedVehicles"]
-          .map<Vehicle>((map) => Vehicle.fromJson(map))
+      _email = mapData["email"]!;
+      _name = mapData["name"]!;
+      _vehicles = mapData["associatedVehicles"]
+              .map<Vehicle>((map) => Vehicle.fromJson(map))
+              .toList() ??
+          [];
+      _confidenceUsers = mapData['confidenceUsers']
+          .map<ConfidenceUser>(
+              (confidenceUser) => ConfidenceUser.fromJson(confidenceUser))
           .toList() ?? [];
-      confidenceUsers = [];
-      urlPhoto = "";
+      _urlPhoto = "";
 
-      tokenExpirationDate = DateTime.now().add(const Duration(minutes: 30));
+      _tokenExpirationDate = DateTime.now().add(const Duration(minutes: 30));
     }
 
     notifyListeners();
@@ -40,17 +43,58 @@ class UserProvider extends ChangeNotifier {
   Future<void> save() async {
     // Almacena los datos en el almacenamiento
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("email", email!);
-    prefs.setString("name", name!);
-    prefs.setStringList("vehicles", vehicles!.map((v) => v.plate).toList());
-    prefs.setStringList("confidenceUsers", confidenceUsers!.map((c) => c.email).toList());
+    prefs.setString("email", _email!);
+    prefs.setString("name", _name!);
+    prefs.setStringList("vehicles", _vehicles!.map((v) => v.plate).toList());
+    prefs.setStringList(
+        "confidenceUsers", _confidenceUsers!.map((c) => c.email).toList());
     //TODO: Ensure URL not NULL
-    prefs.setString("urlPhoto", urlPhoto!);
+    prefs.setString("urlPhoto", _urlPhoto!);
   }
 
   bool isTokenValid() {
-    return DateTime.now().isBefore(tokenExpirationDate!);
+    return DateTime.now().isBefore(_tokenExpirationDate!);
   }
 
-}
+  set tokenExpirationDate(DateTime value) {
+    _tokenExpirationDate = value;
+  }
 
+  set token(String value) {
+    _token = value;
+  }
+
+  set urlPhoto(String value) {
+    _urlPhoto = value;
+  }
+
+  set confidenceUsers(List<ConfidenceUser> value) {
+    _confidenceUsers = value;
+  }
+
+  set vehicles(List<Vehicle> value) {
+    _vehicles = value;
+  }
+
+  set name(String value) {
+    _name = value;
+  }
+
+  set email(String value) {
+    _email = value;
+  }
+
+  String? getName () { return _name;}
+
+  String? getEmail () { return _email;}
+
+  List<Vehicle>? getVehicles() {return _vehicles;}
+
+  List<ConfidenceUser>? getConfidenceUsers(){ return _confidenceUsers;}
+
+  String? getUrlPhoto() { return _urlPhoto; }
+
+  String ? getToken () { return _token; }
+
+  DateTime? getTokenExpirationDate() { return _tokenExpirationDate; }
+}
