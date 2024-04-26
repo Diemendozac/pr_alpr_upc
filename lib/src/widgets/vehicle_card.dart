@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:pr_alpr_upc/src/models/color_enum.dart';
 import 'package:pr_alpr_upc/src/models/vehicle.dart';
-import 'package:pr_alpr_upc/src/services/vehicle_service.dart';
-import 'package:pr_alpr_upc/src/widgets/vehicle_form.dart';
+import 'package:pr_alpr_upc/src/pages/home_page/components/vehicle_form.dart';
 
 class VehicleCard extends StatelessWidget {
   final Vehicle _vehicle;
-  final VehicleService _vehicleService = VehicleService();
 
-  VehicleCard(this._vehicle, {super.key});
+  const VehicleCard(this._vehicle, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,27 +50,31 @@ class VehicleCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.sports_motorsports, color: iconsColor),
-              GestureDetector(
-                  child: Icon(Icons.edit, color: iconsColor,),
-                onTap: () {vehicleForm.showForm(context, _vehicle);},
-              )
+              SvgPicture.asset(
+                'assets/img/helmet.svg',
+                width: 30,
+                height: 30,
+
+              ),
+              _vehicle.isOwner ? IconButton(
+                padding: const EdgeInsets.only(left: 20, bottom: 20),
+                icon: Icon(Icons.edit, color: iconsColor,  ),
+                onPressed: () {vehicleForm.showForm(context, _vehicle);},
+              ) : Container()
             ],
           ),
-          Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _vehicle.plate,
-                  style: titleStyle,
-                ),
-                Text(
-                  _vehicle.line,
-                  style: subtitleStyle,
-                )
-              ],
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _vehicle.plate,
+                style: titleStyle,
+              ),
+              Text(
+                _vehicle.line,
+                style: subtitleStyle,
+              )
+            ],
           ),
           _buildVehicleStats(context),
         ],
@@ -112,7 +116,7 @@ class VehicleCard extends StatelessWidget {
                   width: 16,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
-                      color: Colors.red),
+                      color: getColor(_vehicle.color?? 'AZUL')),
                 )
               ],
             ))

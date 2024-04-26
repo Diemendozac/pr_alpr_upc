@@ -19,6 +19,7 @@ class NotificationPage extends StatelessWidget {
   }
 
   Widget _createHeader(BuildContext context) {
+
     final height = MediaQuery.of(context).size.height;
 
     return SafeArea(

@@ -13,9 +13,16 @@ class UserProvider extends ChangeNotifier {
   String? _name;
   List<Vehicle>? _vehicles;
   List<ConfidenceUser>? _confidenceUsers;
+  List<ConfidenceUser>? _confidenceRequests;
   String? _urlPhoto;
   String? _token;
   DateTime? _tokenExpirationDate;
+
+
+  UserProvider._();
+
+  static UserProvider instance = UserProvider._();
+
 
   Future<void> findLoggedInUser() async {
     // Realiza la consulta a la API
@@ -24,16 +31,32 @@ class UserProvider extends ChangeNotifier {
       Map<String, dynamic> mapData = jsonDecode(response.body);
       _email = mapData["email"]!;
       _name = mapData["name"]!;
-      _vehicles = mapData["associatedVehicles"]
-              .map<Vehicle>((map) => Vehicle.fromJson(map))
-              .toList() ??
-          [];
-      _confidenceUsers = mapData['confidenceUsers']
-          .map<ConfidenceUser>(
-              (confidenceUser) => ConfidenceUser.fromJson(confidenceUser))
-          .toList() ?? [];
-      _urlPhoto = "";
-
+      try {
+        _vehicles = mapData["associatedVehicles"]
+                      .map<Vehicle>((map) => Vehicle.fromJson(map))
+                      .toList() ??
+                  [];
+      } catch (e) {
+        _vehicles = [];
+      }
+      try {
+        _confidenceUsers = mapData['confidenceCircle']
+            .map<ConfidenceUser>(
+                (confidenceUser) => ConfidenceUser.fromJson(confidenceUser))
+            .toList() ?? [];
+        _urlPhoto = "";
+      } catch (e) {
+        _confidenceUsers = [];
+      }
+      try {
+        _confidenceRequests = mapData['confidenceRequests']
+            .map<ConfidenceUser>(
+                (confidenceUser) => ConfidenceUser.fromJson(confidenceUser))
+            .toList() ?? [];
+        _urlPhoto = "";
+      } catch (e) {
+        _confidenceRequests = [];
+      }
       _tokenExpirationDate = DateTime.now().add(const Duration(minutes: 30));
     }
 
@@ -52,6 +75,18 @@ class UserProvider extends ChangeNotifier {
     prefs.setString("urlPhoto", _urlPhoto!);
   }
 
+  void clearData () {
+    _email = null;
+    _name = null;
+    _vehicles = null;
+    _confidenceUsers = null;
+    _confidenceRequests = null;
+    _urlPhoto = null;
+    _token = null;
+    _tokenExpirationDate = null;
+
+  }
+
   bool isTokenValid() {
     return DateTime.now().isBefore(_tokenExpirationDate!);
   }
@@ -68,12 +103,21 @@ class UserProvider extends ChangeNotifier {
     _urlPhoto = value;
   }
 
-  set confidenceUsers(List<ConfidenceUser> value) {
-    _confidenceUsers = value;
+  void setConfidenceUsers(List<ConfidenceUser> confidenceUsers) {
+    _confidenceUsers = confidenceUsers;
+    notifyListeners();
+
   }
 
-  set vehicles(List<Vehicle> value) {
+  void setConfidenceRequests(List<ConfidenceUser> confidenceRequests) {
+    _confidenceRequests = confidenceRequests;
+    notifyListeners();
+
+  }
+
+  void setVehicles(List<Vehicle> value) {
     _vehicles = value;
+    notifyListeners();
   }
 
   set name(String value) {
@@ -88,9 +132,11 @@ class UserProvider extends ChangeNotifier {
 
   String? getEmail () { return _email;}
 
-  List<Vehicle>? getVehicles() {return _vehicles;}
+  List<Vehicle> getVehicles() {return _vehicles ?? [];}
 
   List<ConfidenceUser>? getConfidenceUsers(){ return _confidenceUsers;}
+
+  List<ConfidenceUser>? getConfidenceRequests(){ return _confidenceRequests;}
 
   String? getUrlPhoto() { return _urlPhoto; }
 

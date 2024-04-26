@@ -12,14 +12,16 @@ class DoubleBackgroundPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Stack(
-        children: [
-          imageManager.getBackgroundTopCicleImage(),
-          imageManager.getBackgroundBottomImage(context),
-          contentWidget,
-        ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        body: Stack(
+          children: [
+            imageManager.getBackgroundTopCicleImage(),
+            imageManager.getBackgroundBottomImage(context),
+            contentWidget,
+          ],
+        ),
       ),
     );
   }

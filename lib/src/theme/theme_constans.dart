@@ -4,8 +4,8 @@ const lightBackgroundColor = Colors.white;
 const lightOnBackgroundColor = Color.fromRGBO(25, 35, 66, 1);
 const lightPrimaryColor = Color.fromRGBO(86, 125, 244, 1);
 const lightOnPrimaryColor = Colors.white;
-const lightSecundaryColor = Color.fromRGBO(255, 49, 123, 1);
-const lightOnSecundaryColor = Colors.white;
+const lightSecondaryColor = Color.fromRGBO(255, 49, 123, 1);
+const lightOnSecondaryColor = Colors.white;
 const lightFocusColor = Color.fromRGBO(250, 105, 158, 1.0);
 const lightErrorColor = Color.fromRGBO(244, 67, 54, 1);
 const lightOnErrorColor = Colors.white;
@@ -19,8 +19,8 @@ const darkBackgroundColor = Color.fromRGBO(16, 22, 41, 1);
 const darkOnBackgroundColor = Colors.white;
 const darkPrimaryColor = lightPrimaryColor;
 const darkOnPrimaryColor = Colors.white;
-const darkSecundaryColor = lightSecundaryColor;
-const darkOnSecundaryColor = Colors.white;
+const darkSecondaryColor = lightSecondaryColor;
+const darkOnSecondaryColor = Colors.white;
 const darkFocusColor = Color.fromRGBO(255, 49, 123, 0.6);
 const darkErrorColor = Color.fromRGBO(244, 67, 54, 1);
 const darkOnErrorColor = Colors.white;
@@ -38,8 +38,8 @@ ThemeData lightTheme = ThemeData(
     onBackground: lightOnBackgroundColor,
     primary: lightPrimaryColor,
     onPrimary: lightOnPrimaryColor,
-    secondary: lightSecundaryColor,
-    onSecondary: lightSecundaryColor,
+    secondary: lightSecondaryColor,
+    onSecondary: lightSecondaryColor,
     surface: lightSurfaceColor,
     onSurface: lightOnSurfaceColor,
     error: lightErrorColor,
@@ -63,8 +63,8 @@ ThemeData darkTheme = ThemeData(
     onBackground: darkOnBackgroundColor,
     primary: darkPrimaryColor,
     onPrimary: darkOnPrimaryColor,
-    secondary: darkSecundaryColor,
-    onSecondary: darkSecundaryColor,
+    secondary: darkSecondaryColor,
+    onSecondary: darkSecondaryColor,
     surface: darkSurfaceColor,
     onSurface: darkOnSurfaceColor,
     error: darkErrorColor,

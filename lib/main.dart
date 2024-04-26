@@ -1,16 +1,19 @@
 import 'package:auth_state_manager/auth_state_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:pr_alpr_upc/src/pages/movements_page/movements_page.dart';
+import 'package:pr_alpr_upc/src/pages/user_guide_page/user_guide_page.dart';
+import 'package:pr_alpr_upc/src/pages/user_profile_page/user_profile_page.dart';
 import 'package:pr_alpr_upc/src/providers/auth_state.dart';
 import 'package:pr_alpr_upc/src/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:pr_alpr_upc/firebase_options.dart';
-import 'package:pr_alpr_upc/src/pages/alert_page.dart';
-import 'package:pr_alpr_upc/src/pages/home_page.dart';
-import 'package:pr_alpr_upc/src/pages/login_page.dart';
-import 'package:pr_alpr_upc/src/pages/initial_page.dart';
-import 'package:pr_alpr_upc/src/pages/notification_page.dart';
-import 'package:pr_alpr_upc/src/services/locar_storage.dart';
+import 'package:pr_alpr_upc/src/config/firebase_options.dart';
+import 'package:pr_alpr_upc/src/pages/alert/alert_page.dart';
+import 'package:pr_alpr_upc/src/pages/home_page/home_page.dart';
+import 'package:pr_alpr_upc/src/pages/login_page/login_page.dart';
+import 'package:pr_alpr_upc/src/pages/initial_page/initial_page.dart';
+import 'package:pr_alpr_upc/src/pages/notification_page/notification_page.dart';
+import 'package:pr_alpr_upc/src/services/local_storage.dart';
 import 'package:pr_alpr_upc/src/theme/theme_constans.dart';
 import 'package:pr_alpr_upc/src/theme/theme_manager.dart';
 
@@ -52,13 +55,14 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (context) => AuthState(),
         ),
         ChangeNotifierProvider(
-          create: (context) => UserProvider(),
+          create: (context) => UserProvider.instance,
         )
       ],
       child: MaterialApp(
@@ -72,11 +76,14 @@ class _MyAppState extends State<MyApp> {
           'initial': (BuildContext context) => const InitialPage(),
           'login': (BuildContext context) {
             final authState = context.watch<AuthState>();
-            return authState.isLoggedIn ? HomePage() : const LoginPage();
+            return authState.isLoggedIn ? const HomePage() : const LoginPage();
           },
           'alert': (BuildContext context) => const AlertPage(),
-          'home': (BuildContext context) => HomePage(),
-          'notification': (BuildContext context) => const NotificationPage()
+          'home': (BuildContext context) => const HomePage(),
+          'notification': (BuildContext context) => const NotificationPage(),
+          'user_guide': (BuildContext context) => const UserGuidePage(),
+          'movements': (BuildContext context) => const MovementsPage(),
+          'user_profile': (BuildContext context) => const UserProfilePage(),
         },
       ),
     );

@@ -1,12 +1,13 @@
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:pr_alpr_upc/src/providers/user_provider.dart';
-import 'package:pr_alpr_upc/src/services/local_storage.dart';
 import 'dart:convert';
 
 import '../models/confidence_user.dart';
+import 'local_storage.dart';
 
-class ConfidenceUserService {
+class ConfidenceRequestService {
 
   final String baseUrl = LocalStorage.prefs.getString('baseUrl')!;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
@@ -14,7 +15,7 @@ class ConfidenceUserService {
 
   Future<List<ConfidenceUser>>getConfidenceCircle() async {
 
-    var response = await http.get(Uri.parse("$baseUrl/confidence-circle"));
+    var response = await http.get(Uri.parse("$baseUrl/confidence-request"));
 
     // Comprueba el estado de la respuesta
     if (response.statusCode != 200) {
@@ -34,13 +35,13 @@ class ConfidenceUserService {
     if(token == null) return null;
 
     var response = await http.post(
-      Uri.parse('$baseUrl/confidence-circle/add?email=$confidenceUserEmail'),
+      Uri.parse('$baseUrl/add?email=$confidenceUserEmail'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'
       },
     );
-    if (response.statusCode == 200) refreshConfidenceCircle(response.body);
+    if (response.statusCode == 200) refreshConfidenceRequests(response.body);
     return response;
   }
 
@@ -50,17 +51,17 @@ class ConfidenceUserService {
     if(token == null) return null;
 
     var response = await http.delete(
-      Uri.parse('$baseUrl/confidence-circle/delete?email=$confidenceUserEmail'),
+      Uri.parse('$baseUrl/delete?email=$confidenceUserEmail'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'
       },
     );
-    if (response.statusCode == 200) refreshConfidenceCircle(response.body);
+    if (response.statusCode == 200) refreshConfidenceRequests(response.body);
     return response;
   }
 
-  void refreshConfidenceCircle(String body) {
+  void refreshConfidenceRequests(String body) {
 
     List<dynamic> mapData = jsonDecode(body);
 

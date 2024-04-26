@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pr_alpr_upc/src/pages/reverse_background_page.dart';
+import 'package:pr_alpr_upc/src/pages/reverse_background_page/reverse_background_page.dart';
 import 'package:pr_alpr_upc/src/services/google_auth_service.dart';
 import 'package:pr_alpr_upc/src/widgets/buttons.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/auth_state.dart';
+import '../../providers/auth_state.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -37,7 +37,7 @@ class LoginPage extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                     textAlign: TextAlign.left),
                 Text(
-                  'Aplicación',
+                  'CampusGate',
                   style: Theme.of(context).textTheme.titleMedium,
                   textAlign: TextAlign.left,
                 ),

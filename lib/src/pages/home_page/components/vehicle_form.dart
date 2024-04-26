@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pr_alpr_upc/src/services/vehicle_service.dart';
 import 'package:pr_alpr_upc/src/utils/form_constants.dart';
 
-import '../models/vehicle.dart';
+import '../../../models/color_enum.dart';
+import '../../../models/vehicle.dart';
 
 class VehicleForm {
   final _formKey = GlobalKey<FormState>();
@@ -73,10 +74,10 @@ class VehicleForm {
                               ),
                               Expanded(
                                   child: buildDropdownButtonFormField(context,
-                                      brandOptions, 'Color', setColor, vehicle?.color)),
+                                      colors, 'Color', setColor, vehicle?.color)),
                             ],
                           )),
-                          _buildFormButton(primaryColor, vehicle == null),
+                          _buildFormButton(primaryColor, vehicle == null, context),
                         ],
                       ),
                     ),
@@ -98,8 +99,9 @@ class VehicleForm {
       children: [
         const Text('Modifica tu vehículo'),
         IconButton(
-            onPressed: () {
-              vehicleService.deleteVehicle(vehicle.plate);
+            onPressed: () async {
+              bool? httpResponse = await vehicleService.deleteVehicle(vehicle.plate);
+              if(httpResponse! && httpResponse && context.mounted) Navigator.pop(context, true);
             },
             icon: Icon(
               Icons.delete,
@@ -131,7 +133,7 @@ class VehicleForm {
                   style: Theme.of(context).textTheme.bodyLarge,
                 )))
             .toList(),
-        onChanged: (opt) => print(opt));
+        onChanged: (opt) => (opt));
   }
 
   Widget _buildTextFormInput(String label, BuildContext context,
@@ -155,7 +157,7 @@ class VehicleForm {
     );
   }
 
-  Padding _buildFormButton(Color primaryColor, bool isSave) {
+  Padding _buildFormButton(Color primaryColor, bool isSave, BuildContext context) {
     String text = isSave ? 'Añade' : 'Modifica';
     ElevatedButton formButton = ElevatedButton(
       style: ButtonStyle(
@@ -174,7 +176,7 @@ class VehicleForm {
               isOwner: true);
           bool? httpResponse = isSave ? await vehicleService.saveVehicle(requestVehicle) :
               await vehicleService.updateVehicle(requestVehicle);
-          print(httpResponse);
+          if(httpResponse! && httpResponse && context.mounted) Navigator.pop(context, true);
         }
 
       },

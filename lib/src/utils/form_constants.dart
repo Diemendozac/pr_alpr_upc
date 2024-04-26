@@ -40,7 +40,7 @@ class FormConstants {
       return 'Campo obligatorio';
     }
 
-    if(!plateRegex.hasMatch(email)) {
+    if(!emailRegex.hasMatch(email)) {
       return 'Ingrese un dato válido';
     }
     return null;

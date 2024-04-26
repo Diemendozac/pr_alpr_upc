@@ -57,9 +57,10 @@ class GoogleAuthService {
       if(googleUser != null) {
         if(!googleUser.email.endsWith('unicesar.edu.co')){
           handleSignOut();
-          if(context.mounted) Navigator.pushNamed(context, 'alert', arguments: templateAlerts.notAllowedAcountError );
+          if(context.mounted) Navigator.pushNamed(context, 'alert', arguments: templateAlerts.notAllowedAcountError);
           return false;
         }
+        print(googleUser.id);
         String? token = await tokenProvider.saveToken(
             googleUser.email,
             googleUser.id,

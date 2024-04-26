@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/image_manager.dart';
+import '../../theme/image_manager.dart';
 
 class ReverseBackgroundPage extends StatelessWidget {
   ImageManager imageManager = ImageManager.instance;

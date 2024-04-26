@@ -2,10 +2,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'local_storage.dart';
+
 
 class UserService {
-  //http://ec2-18-231-181-27.sa-east-1.compute.amazonaws.com:8080
-  static String baseUrl = 'http://ec2-18-231-181-27.sa-east-1.compute.amazonaws.com:8080';
+  final String baseUrl = LocalStorage.prefs.getString('baseUrl')!;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   Future<bool> saveUser(String email, String password, String name, String? photo ) async {

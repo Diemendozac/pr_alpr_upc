@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pr_alpr_upc/src/pages/double_background_page.dart';
+import 'package:pr_alpr_upc/src/pages/double_background/double_background_page.dart';
 
 class FirstPage extends StatelessWidget {
   const FirstPage({super.key});
@@ -12,7 +12,7 @@ class FirstPage extends StatelessWidget {
   Widget _createWidget(BuildContext context) {
 
     return Center(
-      child: Text('Aplicación', style: Theme.of(context).textTheme.titleLarge),
+      child: Text('CampusGate', style: Theme.of(context).textTheme.titleLarge),
     );
 
   }
