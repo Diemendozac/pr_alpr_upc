@@ -4,6 +4,7 @@ import 'package:pr_alpr_upc/src/providers/user_provider.dart';
 import 'package:pr_alpr_upc/src/services/local_storage.dart';
 import 'dart:convert';
 
+import '../http/response/local_response.dart';
 import '../models/confidence_user.dart';
 
 class ConfidenceUserService {
@@ -31,17 +32,20 @@ class ConfidenceUserService {
   Future<dynamic> addConfidenceUser(String confidenceUserEmail) async {
 
     String? token = await _storage.read(key: 'token');
-    if(token == null) return null;
 
-    var response = await http.post(
-      Uri.parse('$baseUrl/confidence-circle/add?email=$confidenceUserEmail'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      },
-    );
-    if (response.statusCode == 200) refreshConfidenceCircle(response.body);
-    return response;
+    try {
+      var response = await http.post(
+            Uri.parse('$baseUrl/confidence-circle/add?email=$confidenceUserEmail'),
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+            },
+          );
+      if (response.statusCode == 200) refreshConfidenceCircle(response.body);
+      return response;
+    } catch (e) {
+      return LocalResponse(500);
+    }
   }
 
   Future<dynamic> deleteConfidenceUser(String confidenceUserEmail) async {

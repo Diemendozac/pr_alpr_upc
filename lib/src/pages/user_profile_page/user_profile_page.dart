@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pr_alpr_upc/src/providers/user_provider.dart';
 import 'package:pr_alpr_upc/src/utils/form_constants.dart';
+import 'package:pr_alpr_upc/src/utils/image_provider_helper.dart';
 import 'package:pr_alpr_upc/src/widgets/buttons.dart';
 
 class UserProfilePage extends StatelessWidget {
@@ -32,7 +33,8 @@ class UserProfilePage extends StatelessWidget {
                     height: 120,
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: const Image(image: AssetImage('assets/img/default-user.png'))),
+                        child: Image(image: ImageProviderHelper.getImageProvider(userProvider)),
+                    )
                   ),
                 ],
               ),

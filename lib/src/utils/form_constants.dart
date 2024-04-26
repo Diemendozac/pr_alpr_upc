@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 class FormConstants {
 
   List<String> brandOptions = [
-    'Suzuki',
     'Yamaha',
-    'KTM',
+    'Honda',
     'Bajaj',
+    'Suzuki',
+    'AKT',
+    'TVS',
+    'Kawasaki',
+    'KTM',
     'Hero',
-    'Kawasaki'
   ];
 
   List<String> modelOptions = [

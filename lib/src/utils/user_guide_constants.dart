@@ -7,32 +7,25 @@ class UserGuideConstants {
 
   final List<UserGuide> userManual = [
       UserGuide(
-        title: 'Fast, Fluid and Secure',
+        title: 'Seguridad y Practicidad',
         description:
-        'Enjoy the best of the world in the palm of your hands.',
-        image: 'assets/img/guide/image0.png',
-        bgColor: Colors.indigo,
-      ),
-     UserGuide(
-        title: 'Connect with your friends.',
-        description: 'Connect with your friends anytime anywhere.',
-        image: 'assets/img/guide/image1.png',
-        bgColor: const Color(0xff1eb090),
-      ),
-      UserGuide(
-        title: 'Bookmark your favourites',
-        description:
-        'Bookmark your favourite quotes to read at a leisure time.',
-        image: 'assets/img/guide/image2.png',
+        'Despreocúpate por el ticket de tu vehículo',
+        image: 'assets/img/guide/secure_asset.svg',
         bgColor: const Color(0xfffeae4f),
       ),
       UserGuide(
-        title: 'Follow creators',
-        description: 'Follow your favourite creators to stay in the loop.',
-        image: 'assets/img/guide/image3.png',
-        bgColor: Colors.purple,
+        title: 'Usuarios de Confianza',
+        description:
+        'Comparte el accesso a tu vehículo con tus amigos',
+        image: 'assets/img/guide/friendship_asset.svg',
+        bgColor: Colors.indigo,
+      ),
+     UserGuide(
+        title: 'Notificaciones y Registros',
+        description: 'Te mantenemos atento y guardamos registro de tus ingresos',
+        image: 'assets/img/guide/notification_asset.svg',
+        bgColor: const Color(0xff1eb090),
       ),
     ];
-
 
 }

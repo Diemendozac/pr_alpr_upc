@@ -1,5 +1,6 @@
 import 'package:auth_state_manager/auth_state_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:pr_alpr_upc/src/pages/about_page/about_page.dart';
 import 'package:pr_alpr_upc/src/pages/movements_page/movements_page.dart';
 import 'package:pr_alpr_upc/src/pages/user_guide_page/user_guide_page.dart';
 import 'package:pr_alpr_upc/src/pages/user_profile_page/user_profile_page.dart';
@@ -84,6 +85,7 @@ class _MyAppState extends State<MyApp> {
           'user_guide': (BuildContext context) => const UserGuidePage(),
           'movements': (BuildContext context) => const MovementsPage(),
           'user_profile': (BuildContext context) => const UserProfilePage(),
+          'about': (BuildContext context) => const AboutPage(),
         },
       ),
     );

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pr_alpr_upc/src/utils/user_guide_constants.dart';
 
 class UserGuide {
@@ -41,7 +42,7 @@ class UserGuidePageState extends State<UserGuidePage> {
     return Scaffold(
       body: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        color: pages[_currentPage].bgColor,
+        color: Theme.of(context).colorScheme.background,
         child: SafeArea(
           child: Column(
             children: [
@@ -57,15 +58,15 @@ class UserGuidePageState extends State<UserGuidePage> {
                     });
                   },
                   itemBuilder: (context, idx) {
-                    final _item = pages[idx];
+                    final item = pages[idx];
                     return Column(
                       children: [
                         Expanded(
                           flex: 3,
                           child: Padding(
                             padding: const EdgeInsets.all(32.0),
-                            child: Image.asset(
-                              _item.image,
+                            child: SvgPicture.asset(
+                              item.image,
                             ),
                           ),
                         ),
@@ -74,26 +75,26 @@ class UserGuidePageState extends State<UserGuidePage> {
                             child: Column(children: [
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
-                                child: Text(_item.title,
+                                child: Text(item.title,
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleLarge
                                         ?.copyWith(
                                       fontWeight: FontWeight.bold,
-                                      color: _item.textColor,
+                                      color: Theme.of(context).colorScheme.onBackground,
                                     )),
                               ),
                               Container(
                                 constraints: const BoxConstraints(maxWidth: 280),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 24.0, vertical: 8.0),
-                                child: Text(_item.description,
+                                child: Text(item.description,
                                     textAlign: TextAlign.center,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyMedium
                                         ?.copyWith(
-                                      color: _item.textColor,
+                                      color: Theme.of(context).colorScheme.onBackground,
                                     )),
                               )
                             ]))
@@ -115,7 +116,7 @@ class UserGuidePageState extends State<UserGuidePage> {
                   height: 4,
                   margin: const EdgeInsets.all(2.0),
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onBackground,
                       borderRadius: BorderRadius.circular(10.0)),
                 ))
                     .toList(),
@@ -142,7 +143,7 @@ class UserGuidePageState extends State<UserGuidePage> {
                         _currentPage == pages.length - 1
                             ? "Salir"
                             : "Siguiente",
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
                       ),
                     ),
                   ],

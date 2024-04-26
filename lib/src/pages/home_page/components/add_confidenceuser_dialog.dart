@@ -20,7 +20,6 @@ class AddUserFormDialogState extends State<AddUserFormDialog> {
   @override
   Widget build(BuildContext context) {
     final formConstants = FormConstants();
-    final templateAlerts = TemplateAlerts.instance;
 
     return AlertDialog(
       scrollable: true,
@@ -56,16 +55,8 @@ class AddUserFormDialogState extends State<AddUserFormDialog> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     final httpResponse = await widget.confidenceUserService.addConfidenceUser(emailEditingController.text);
-                    if (context.mounted) {
-                      final status = httpResponse.statusCode;
-                      templateAlerts.generateTemplateAlert(
-                        status,
-                        templateAlerts.buildTemplateArguments(
-                          status,
-                          templateAlerts.addConfidentUserMessages,
-                        ),
-                        context,
-                      );
+                    if (context.mounted && httpResponse.statusCode >= 300) {
+                      TemplateAlerts.generateAlerts(context, httpResponse, TemplateAlerts.addConfidentUserMessages);
                     }
                   }
                 },

@@ -53,7 +53,7 @@ class AlertPage extends StatelessWidget {
                     .titleMedium
                     ?.copyWith(color: Theme.of(context).colorScheme.onError)
             ),
-            Text(alertData['message'],
+            Text(alertData['message'] ?? 'Error desconocido. Intente nuevamente',
                 textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .textTheme

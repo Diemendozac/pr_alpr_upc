@@ -44,10 +44,6 @@ class MobileSideBar extends StatelessWidget {
             title: Text('Datos de Usuario', style: titleStyle),
           ),
           ListTile(
-            onTap: () {},
-            title: Text('Opción1', style: titleStyle),
-          ),
-          ListTile(
             onTap: () {
               Navigator.pushNamed(context, 'user_guide');
             },
@@ -58,7 +54,7 @@ class MobileSideBar extends StatelessWidget {
             title: Text('Support', style: titleStyle),
           ),
           ListTile(
-            onTap: () {},
+            onTap: () => Navigator.of(context).pushNamed('about'),
             title: Text('Acerca de', style: titleStyle),
           ),
           Container(

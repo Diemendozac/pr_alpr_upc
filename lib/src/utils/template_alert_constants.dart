@@ -10,29 +10,58 @@ class TemplateAlerts {
   static const warningColor = Colors.amber;
   static const successColor = Color.fromRGBO(86, 125, 244, 1);
 
-  final Map notAllowedAcountError = {
+  static const Map notAllowedAcountError = {
     'color' : errorColor,
     'icon' : Icons.close,
     'title': 'Error',
     'message': 'Sólo se permiten cuentas institucionales'
   };
 
-  final Map confidentUserWarning = {
+
+  static final Map confidentUserWarning = {
     'color' : warningColor,
     'icon' : Icons.warning,
     'title': 'Precaución',
     'message': 'Los usuarios de confianza pueden salir con tu vehículo'
   };
 
-  final Map addConfidentUserMessages = {
+  static final Map addConfidentUserMessages = {
     200 : 'Solicitud realizada con éxito',
     401 : 'El usuario remitente no se encuentra registrado en la base de datos',
     404 : 'El usuario ingresado no se encuentra registrado en la base de datos',
   };
 
-  Map<String, dynamic> buildTemplateArguments(int statusCode, Map<dynamic, dynamic> messages) {
+  static final Map registerMessages = {
+    400 : 'El usuario ya se encuentra registrado',
+    401 : 'El usuario remitente no se encuentra registrado en la base de datos',
+    404 : 'El usuario ingresado no se encuentra registrado en la base de datos',
+    406 : 'Sólo se permiten cuentas institucionales',
+  };
+
+  static final Map loginMessages = {
+    401 : 'Sólo se permiten cuentas institucionales',
+    404 : 'El usuario ingresado no se encuentra registrado en la base de datos',
+    406 : 'Sólo se permiten cuentas institucionales',
+    500 : 'Tuvimos problemas para procesar tu solicitud. Intenta nuevamente',
+    501 : 'Tu dispositivo no pudo comunicarse con el servidor. Intenta nuevamente',
+  };
+
+  static Map<String, dynamic> buildTemplateArguments(int? statusCode, Map<dynamic, dynamic> messages) {
+
+    late Color color;
+
+    if( statusCode != null) {
+      if (statusCode < 300) {
+        color = successColor;
+      } else {
+        color = errorColor;
+      }
+    } else {
+      color = warningColor;
+    }
+
     return {
-      'color' : errorColor,
+      'color' : color,
       'icon' : Icons.close,
       'title': 'Error',
       'message': messages[statusCode]
@@ -40,18 +69,12 @@ class TemplateAlerts {
 
   }
 
-  void generateTemplateAlert(int statusCode, Map<String, dynamic> arguments, BuildContext context) {
-
-    if (context.mounted) {
-      if (statusCode >= 400) {
-        Navigator.pushNamed(context, 'alert',
-            arguments: arguments
-        );
-        return;
-      }
-      Navigator.pop(context, true);
-    }
-
+  static void generateAlerts(BuildContext context, dynamic response, Map messages) {
+    dynamic arguments = TemplateAlerts.buildTemplateArguments(
+      response.statusCode,
+      messages,
+    );
+    Navigator.of(context).pushNamed('alert', arguments: arguments);
   }
 
 

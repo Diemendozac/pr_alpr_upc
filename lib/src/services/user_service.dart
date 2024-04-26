@@ -9,7 +9,7 @@ class UserService {
   final String baseUrl = LocalStorage.prefs.getString('baseUrl')!;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  Future<bool> saveUser(String email, String password, String name, String? photo ) async {
+  Future<dynamic> saveUser(String email, String password, String name, String? photo ) async {
 
     String photoUrl = photo ?? 'null';
     var response = await http.post(
@@ -27,7 +27,7 @@ class UserService {
         'confidenceCircle': []
       }),
     );
-    return response.statusCode == 200 ? true : false;
+    return response;
 
   }
 
