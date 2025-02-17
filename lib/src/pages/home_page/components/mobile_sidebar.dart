@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr_alpr_upc/src/bloc/auth_bloc/auth_bloc.dart';
+import 'package:pr_alpr_upc/src/bloc/auth_bloc/auth_event.dart';
+import 'package:pr_alpr_upc/src/bloc/user_bloc/user_event.dart';
 import 'package:pr_alpr_upc/src/pages/home_page/components/user_header.dart';
-import 'package:pr_alpr_upc/src/services/google_auth_service.dart';
-import 'package:provider/provider.dart';
 
-import '../../../providers/auth_state.dart';
+import '../../../bloc/user_bloc/user_bloc.dart';
 
 class MobileSideBar extends StatelessWidget {
   const MobileSideBar({super.key});
@@ -62,10 +64,9 @@ class MobileSideBar extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: GestureDetector(
               onTap: () {
-                GoogleAuthService authService = GoogleAuthService.instance;
-                authService.eraseUserData();
-                final authState = context.read<AuthState>();
-                authState.logOutUser();
+                context.read<UserBloc>().add(UserSignOutRequested());
+                context.read<AuthBloc>().add(LogoutRequested());
+                Navigator.pushReplacementNamed(context, 'login');
               },
               child: Row(
                 children: [

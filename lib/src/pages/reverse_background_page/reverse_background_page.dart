@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../theme/image_manager.dart';
 
 class ReverseBackgroundPage extends StatelessWidget {
-  ImageManager imageManager = ImageManager.instance;
+  final ImageManager imageManager = ImageManager.instance;
 
   final Widget contentWidget;
 
-  ReverseBackgroundPage(this.contentWidget);
+  ReverseBackgroundPage(this.contentWidget, {super.key});
 
   @override
   Widget build(BuildContext context) {

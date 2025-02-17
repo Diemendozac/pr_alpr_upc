@@ -29,7 +29,7 @@ class AlertPage extends StatelessWidget {
 
   Widget _createAlertSubject(BuildContext context, Map alertData, String selectPage) {
     return Center(
-      child: Container(
+      child: SizedBox(
       width: MediaQuery.of(context).size.width * 0.8,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

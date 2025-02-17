@@ -1,4 +1,3 @@
-
 import 'package:pr_alpr_upc/src/models/vehicle.dart';
 
 import 'confidence_user.dart';
@@ -8,7 +7,7 @@ class User {
   String name;
   List<Vehicle> vehicles;
   List<ConfidenceUser> confidenceUsers;
-  String urlPhoto;
+  String? urlPhoto;
 
   User({
     required this.email,
@@ -18,13 +17,30 @@ class User {
     this.urlPhoto = "",
   });
 
+  User copyWith({
+    String? email,
+    String? name,
+    List<Vehicle>? vehicles,
+    List<ConfidenceUser>? confidenceUsers,
+    String? urlPhoto,
+  }) {
+    return User(
+      email: email ?? this.email,
+      name: name ?? this.name,
+      vehicles: vehicles ?? List<Vehicle>.from(this.vehicles),
+      confidenceUsers: confidenceUsers ?? List<ConfidenceUser>.from(this.confidenceUsers),
+      urlPhoto: urlPhoto ?? this.urlPhoto,
+    );
+  }
+
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       email: json["email"],
       name: json["name"],
-      vehicles: List<Vehicle>.from(json["vehicles"].map((c) => Vehicle.fromJson(c))),
-      confidenceUsers:
-      List<ConfidenceUser>.from(json["confidenceUsers"].map((c) => ConfidenceUser.fromJson(c))),
+      vehicles:
+          List<Vehicle>.from(json["associatedVehicles"].map((c) => Vehicle.fromJson(c))),
+      confidenceUsers: List<ConfidenceUser>.from(
+          json["confidenceCircle"].map((c) => ConfidenceUser.fromJson(c))),
       urlPhoto: json["urlPhoto"],
     );
   }
@@ -38,4 +54,6 @@ class User {
       "urlPhoto": urlPhoto,
     };
   }
+
+
 }

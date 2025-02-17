@@ -61,7 +61,6 @@ class _MovementsPageState extends State<MovementsPage> {
   }
 
   Widget _createNotifications(BuildContext context) {
-    MovementsProvider movementsProvider = MovementsProvider.instance;
     return ListView(
       children: movements.map((data) => _createNotificationListTile(data, context))
           .toList(),

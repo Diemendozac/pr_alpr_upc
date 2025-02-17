@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pr_alpr_upc/src/providers/user_provider.dart';
 import 'package:pr_alpr_upc/src/utils/form_constants.dart';
 import 'package:pr_alpr_upc/src/utils/image_provider_helper.dart';
 import 'package:pr_alpr_upc/src/widgets/buttons.dart';
@@ -11,7 +10,6 @@ class UserProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     FormConstants formConstants = FormConstants();
-    UserProvider userProvider = UserProvider.instance;
 
     return Scaffold(
       appBar: AppBar(
@@ -25,7 +23,6 @@ class UserProfilePage extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              // -- IMAGE with ICON
               Stack(
                 children: [
                   SizedBox(
@@ -33,14 +30,12 @@ class UserProfilePage extends StatelessWidget {
                     height: 120,
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: Image(image: ImageProviderHelper.getImageProvider(userProvider)),
+                        child: Image(image: ImageProviderHelper.getImageProvider('')),
                     )
                   ),
                 ],
               ),
               const SizedBox(height: 50),
-
-              // -- Form Fields
               Form(
                 child: Padding(
                   padding: const EdgeInsets.all(15),
@@ -48,14 +43,14 @@ class UserProfilePage extends StatelessWidget {
                     children: [
                       TextFormField(
                         decoration: formConstants.buildInputDecoration(context, 'Nombre'),
-                        initialValue: userProvider.getName(),
+                        initialValue: '',
                         enabled: false,
                       ),
                       const SizedBox(height: 25),
                       TextFormField(
                           decoration: formConstants.buildInputDecoration(context, 'Email'),
                         enabled: false,
-                        initialValue: userProvider.getEmail(),
+                        initialValue: '',
                       ),
                       const SizedBox(height: 25),
                       TextFormField(
@@ -63,7 +58,7 @@ class UserProfilePage extends StatelessWidget {
                         keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 25),
-                      TemplateButtons.instance.createPrimaryButton('Editar', (){}, context, 1),
+                      TemplateButtons.createPrimaryButton('Editar', (){}, context, 1),
                       const SizedBox(height: 25),
                     ],
                   ),

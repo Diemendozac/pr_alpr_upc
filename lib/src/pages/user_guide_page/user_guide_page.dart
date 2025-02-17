@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pr_alpr_upc/src/utils/user_guide_constants.dart';
+import 'package:pr_alpr_upc/src/utils/user_constants.dart';
 
 class UserGuide {
   final String title;
@@ -35,7 +35,7 @@ class UserGuidePageState extends State<UserGuidePage> {
   @override
   Widget build(BuildContext context) {
 
-    final UserGuideConstants userGuideConstants = UserGuideConstants();
+    final UserConstants userGuideConstants = UserConstants();
 
     List<UserGuide> pages = userGuideConstants.userManual;
 
@@ -75,7 +75,7 @@ class UserGuidePageState extends State<UserGuidePage> {
                             child: Column(children: [
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
-                                child: Text(item.title,
+                                child: Text(item.title, textAlign: TextAlign.center,
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleLarge

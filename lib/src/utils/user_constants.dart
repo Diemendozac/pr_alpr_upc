@@ -1,9 +1,18 @@
 
 import 'package:flutter/material.dart';
 
+import '../models/user.dart';
 import '../pages/user_guide_page/user_guide_page.dart';
 
-class UserGuideConstants {
+class UserConstants {
+
+  static User user = User(
+    email: "email",
+    name: "name",
+    urlPhoto: '',
+    confidenceUsers: [],
+    vehicles: []
+  );
 
   final List<UserGuide> userManual = [
       UserGuide(

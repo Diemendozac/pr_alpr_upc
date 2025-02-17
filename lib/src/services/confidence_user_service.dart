@@ -1,17 +1,16 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:pr_alpr_upc/src/providers/user_provider.dart';
-import 'package:pr_alpr_upc/src/services/local_storage.dart';
 import 'dart:convert';
 
+import '../config/config.dart';
 import '../http/response/local_response.dart';
 import '../models/confidence_user.dart';
 
 class ConfidenceUserService {
 
-  final String baseUrl = LocalStorage.prefs.getString('baseUrl')!;
+  final String baseUrl = Config.serverBaseUrl;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  final UserProvider _userProvider = UserProvider.instance;
+  final dynamic _userProvider = null;
 
   Future<List<ConfidenceUser>>getConfidenceCircle() async {
 

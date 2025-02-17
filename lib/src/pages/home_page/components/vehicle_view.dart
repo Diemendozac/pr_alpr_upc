@@ -1,22 +1,17 @@
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../../models/vehicle.dart';
-import '../../../providers/user_provider.dart';
 import '../../../widgets/vehicle_card.dart';
 import 'vehicle_form.dart';
 
 class VehicleView extends StatelessWidget {
-  const VehicleView({super.key});
+  final List<Vehicle> vehicles;
+  const VehicleView({super.key, required this.vehicles});
 
   @override
   Widget build(BuildContext context) {
 
-    final userProvider = Provider.of<UserProvider>(context);
-    if(userProvider.getEmail() == null) userProvider.findLoggedInUser();
-
-    List<Vehicle> vehicles = userProvider.getVehicles();
     List<VehicleCard> vehicleCards = vehicles.map((vehicle) => VehicleCard(vehicle)).toList();
     List<dynamic> userCards = [...vehicleCards];
     userCards.add(_buildAddVehicleCard(context));

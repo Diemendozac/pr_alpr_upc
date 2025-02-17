@@ -6,13 +6,16 @@ class TemplateButtons {
 
   static TemplateButtons instance = TemplateButtons._();
 
-  Widget createPrimaryButton(String text, Function onPressed, BuildContext context, double width) {
+  static Widget createPrimaryButton(String text, Function onPressed, BuildContext context, double width) {
 
     double totalWidth = MediaQuery.of(context).size.width * width;
 
     return ElevatedButton(
         onPressed: () {onPressed();},
         style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12)
+          ),
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).colorScheme.onPrimary,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -24,13 +27,16 @@ class TemplateButtons {
     );
   }
 
-  Widget createSecundaryButton(String text, Function onPressed, BuildContext context, double width) {
+  static Widget createSecundaryButton(String text, Function onPressed, BuildContext context, double width) {
 
     double totalWidth = MediaQuery.of(context).size.width * width;
 
     return ElevatedButton(
         onPressed: () {onPressed();},
         style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)
+            ),
             backgroundColor: Theme.of(context).colorScheme.surface,
             foregroundColor: Theme.of(context).colorScheme.primary,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -50,6 +56,9 @@ class TemplateButtons {
     return ElevatedButton(
         onPressed: () {onPressed();},
         style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)
+            ),
             backgroundColor: Theme.of(context).colorScheme.secondary,
             foregroundColor: Theme.of(context).colorScheme.onError,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

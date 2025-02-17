@@ -1,19 +1,16 @@
 
 import 'package:flutter/material.dart';
 
-import '../providers/user_provider.dart';
-
 
 class ImageProviderHelper {
-  static ImageProvider getImageProvider(UserProvider userProvider) {
+  static ImageProvider getImageProvider(String? userUrlPhoto) {
 
-    String? url = userProvider.getUrlPhoto();
-    if (userProvider.getUrlPhoto() == null || !Uri.parse(url!).isAbsolute ) {
+    if (userUrlPhoto == null || !Uri.parse(userUrlPhoto).isAbsolute ) {
       // Si el photoUrl es nulo, devuelve una imagen Asset
       return const AssetImage('assets/img/default-user.png');
     } else {
       // Si el photoUrl no es nulo, devuelve una imagen de la red
-      return NetworkImage(userProvider.getUrlPhoto()!);
+      return NetworkImage(userUrlPhoto);
     }
   }
 }

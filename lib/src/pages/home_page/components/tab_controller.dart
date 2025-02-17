@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr_alpr_upc/src/bloc/user_bloc/user_bloc.dart';
+import 'package:pr_alpr_upc/src/bloc/user_bloc/user_state.dart';
 import 'package:pr_alpr_upc/src/services/confidence_user_service.dart';
+import 'package:pr_alpr_upc/src/utils/user_constants.dart';
 import 'package:pr_alpr_upc/src/widgets/buttons.dart';
-import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tab_container/tab_container.dart';
 
 import '../../../models/confidence_user.dart';
-import '../../../providers/user_provider.dart';
+import '../../../models/user.dart';
 import 'add_confidenceuser_dialog.dart';
 
 class UserTabContainer extends StatelessWidget {
@@ -16,48 +20,58 @@ class UserTabContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
     TemplateButtons templateButtons = TemplateButtons.instance;
 
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(20),
-        child: TabContainer(
-          controller: TabContainerController(
-            length: 2,
-            initialIndex: (userProvider.getConfidenceUsers() ?? []).isEmpty ? 1 : 2
-          ),
-          radius: 20,
-          color: Theme.of(context).colorScheme.surface,
-          tabs: const [
-            'Usuarios\r\nde Confianza',
-            'Solicitudes',
-          ],
-          children: [
-            Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: buildListViewConfidenceUser(
-                      context, userProvider.getConfidenceUsers() ?? []),
-                ),
-              ],
-            ),
-            Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                  ),
-                  child: buildListViewConfidenceRequest(
-                      context, userProvider.getConfidenceUsers() ?? []),
-                ),
-                buildBottomAddButton(templateButtons, context)
-              ],
-            )
-          ],
+        child: BlocBuilder<UserBloc, UserState>(
+          builder: (context, state) {
+            if (state is UserLoaded) {
+              return _buildTabContainer(context, templateButtons, state.user);
+            } else {
+              return Skeletonizer(child: _buildTabContainer(context, templateButtons, UserConstants.user));
+            }
+          },
         ),
       ),
+    );
+  }
+
+  TabContainer _buildTabContainer(
+      BuildContext context, TemplateButtons templateButtons, User user) {
+    return TabContainer(
+      controller: TabContainerController(
+          length: 2, initialIndex: user.confidenceUsers.isEmpty ? 1 : 2),
+      radius: 20,
+      color: Theme.of(context).colorScheme.surface,
+      tabs: const [
+        'Usuarios\r\nde Confianza',
+        'Solicitudes',
+      ],
+      children: [
+        Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: buildListViewConfidenceUser(
+                  context, user.confidenceUsers),
+            ),
+          ],
+        ),
+        Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 8,
+              ),
+              child: buildListViewConfidenceRequest(
+                  context, user.confidenceUsers),
+            ),
+            buildBottomAddButton(templateButtons, context)
+          ],
+        )
+      ],
     );
   }
 

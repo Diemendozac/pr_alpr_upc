@@ -3,11 +3,12 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
-import 'local_storage.dart';
+import '../config/config.dart';
+
 
 class TicketService {
 
-  final String baseUrl = LocalStorage.prefs.getString('baseUrl')!;
+  final String baseUrl = Config.serverBaseUrl;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   Future<dynamic> findAllUserTickets() async {

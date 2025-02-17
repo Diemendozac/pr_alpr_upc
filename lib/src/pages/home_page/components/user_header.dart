@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pr_alpr_upc/src/bloc/user_bloc/user_bloc.dart';
+import 'package:pr_alpr_upc/src/bloc/user_bloc/user_state.dart';
 import 'package:pr_alpr_upc/src/utils/image_provider_helper.dart';
-import 'package:provider/provider.dart';
+import 'package:pr_alpr_upc/src/utils/user_constants.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../providers/user_provider.dart';
-import '../../../services/local_storage.dart';
-import '../../../theme/theme_manager.dart';
+import '../../../models/user.dart';
+import '../../../widgets/theme_toggle_button.dart';
 
 class UserHeader extends StatelessWidget {
   const UserHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeManager = ThemeManager.instance;
 
     TextStyle? titleStyle = Theme.of(context).textTheme.titleSmall;
     TextStyle? subtitleStyle = Theme.of(context).textTheme.bodySmall;
@@ -23,26 +25,32 @@ class UserHeader extends StatelessWidget {
         direction: Axis.horizontal,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildUserData(titleStyle, subtitleStyle, context),
-          IconButton(
-              onPressed: () => themeManager
-                  .toogleTheme(!LocalStorage.prefs.getBool("themeMode")!),
-              icon: LocalStorage.prefs.getBool("themeMode")!
-                  ? const Icon(Icons.light_mode)
-                  : const Icon(Icons.dark_mode))
+          BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              if (state is UserLoaded) {
+                return _buildUserData(
+                    titleStyle, subtitleStyle, context, state.user);
+              } else {
+                return Skeletonizer(
+                  enabled: true,
+                    child: _buildUserData(titleStyle, subtitleStyle, context,
+                        UserConstants.user));
+              }
+            },
+          ),
+          const ThemeToggleButton()
         ],
       ),
     );
   }
 
   Widget _buildUserData(
-      TextStyle? title, TextStyle? subtitle, BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
+      TextStyle? title, TextStyle? subtitle, BuildContext context, User user) {
     return Flex(
       direction: Axis.horizontal,
       children: [
-        _buildUserImage(ImageProviderHelper.getImageProvider(userProvider)),
-        _buildUserStats(title, subtitle, userProvider.getName()!, userProvider.getEmail()!),
+        _buildUserImage(ImageProviderHelper.getImageProvider(user.urlPhoto)),
+        _buildUserStats(title, subtitle, user.name, user.email),
       ],
     );
   }
@@ -70,7 +78,8 @@ class UserHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(name,
+          Text(
+            name,
             style: title,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.left,

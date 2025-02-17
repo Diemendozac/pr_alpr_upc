@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:pr_alpr_upc/src/services/vehicle_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr_alpr_upc/src/utils/form_constants.dart';
+import 'package:pr_alpr_upc/src/widgets/buttons.dart';
 
+import '../../../bloc/vehicle_bloc/vehicle_bloc.dart';
+import '../../../bloc/vehicle_bloc/vehicle_event.dart';
+import '../../../bloc/vehicle_bloc/vehicle_state.dart';
 import '../../../models/color_enum.dart';
 import '../../../models/vehicle.dart';
 
 class VehicleForm {
   final _formKey = GlobalKey<FormState>();
-  final VehicleService vehicleService = VehicleService();
   late String _plate;
   late String _line;
   late String _brand;
@@ -47,7 +50,7 @@ class VehicleForm {
         builder: (context) => AlertDialog(
               scrollable: true,
               title: buildFormTitle(vehicle, context),
-              titlePadding: const EdgeInsets.only(left: 30, top: 20),
+              titlePadding: const EdgeInsets.only(left: 20, top: 20),
               content: Stack(
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 children: <Widget>[
@@ -58,26 +61,49 @@ class VehicleForm {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          _buildTextFormInput('Placa', context,
-                              formConstants.validatePlate, setPlate, vehicle?.plate, vehicle == null),
-                          _buildTextFormInput('Línea', context,
-                              formConstants.validateSelectedValue, setLine, vehicle?.line, true),
+                          _buildTextFormInput(
+                              'Placa',
+                              context,
+                              formConstants.validatePlate,
+                              setPlate,
+                              vehicle?.plate,
+                              vehicle == null),
+                          _buildTextFormInput(
+                              'Línea',
+                              context,
+                              formConstants.validateSelectedValue,
+                              setLine,
+                              vehicle?.line,
+                              true),
                           _buildPaddingWidget(buildDropdownButtonFormField(
-                              context, brandOptions, 'Marca', setBrand, vehicle?.brand)),
+                              context,
+                              brandOptions,
+                              'Marca',
+                              setBrand,
+                              vehicle?.brand)),
                           _buildPaddingWidget(Row(
                             children: [
                               Expanded(
-                                  child: buildDropdownButtonFormField(context,
-                                      modelOptions, 'Modelo', setModel, vehicle?.model.toString())),
+                                  child: buildDropdownButtonFormField(
+                                      context,
+                                      modelOptions,
+                                      'Modelo',
+                                      setModel,
+                                      vehicle?.model.toString())),
                               const SizedBox(
-                                width: 10,
+                                width: 5,
                               ),
                               Expanded(
-                                  child: buildDropdownButtonFormField(context,
-                                      colors, 'Color', setColor, vehicle?.color)),
+                                  child: buildDropdownButtonFormField(
+                                      context,
+                                      colors,
+                                      'Color',
+                                      setColor,
+                                      vehicle?.color)),
                             ],
                           )),
-                          _buildFormButton(primaryColor, vehicle == null, context),
+                          _buildFormButton(
+                              context, primaryColor, vehicle == null),
                         ],
                       ),
                     ),
@@ -88,7 +114,6 @@ class VehicleForm {
   }
 
   Widget buildFormTitle(Vehicle? vehicle, BuildContext context) {
-
     bool vehicleIsNull = vehicle == null;
     Widget createTitle = const Text('Añade tu vehículo');
     if (vehicleIsNull) return createTitle;
@@ -100,8 +125,12 @@ class VehicleForm {
         const Text('Modifica tu vehículo'),
         IconButton(
             onPressed: () async {
-              bool? httpResponse = await vehicleService.deleteVehicle(vehicle.plate);
-              if(httpResponse! && httpResponse && context.mounted) Navigator.pop(context, true);
+              if (context.read<VehicleBloc>().state is! VehicleRequestLoading) {
+                context
+                    .read<VehicleBloc>()
+                    .add(DeleteVehicleRequested(vehicle.plate));
+                Navigator.pop(context, true);
+              }
             },
             icon: Icon(
               Icons.delete,
@@ -113,33 +142,43 @@ class VehicleForm {
     return modifyTitle;
   }
 
-  DropdownButtonFormField<String> buildDropdownButtonFormField(BuildContext context,
-      List<String> options, String placeHolder, Function(String) setter, String? initialValue) {
-
+  DropdownButtonFormField<String> buildDropdownButtonFormField(
+      BuildContext context,
+      List<String> options,
+      String placeHolder,
+      Function(String) setter,
+      String? initialValue) {
     return DropdownButtonFormField(
       value: initialValue,
-        onSaved: (String? value) {
-          setter(value!);
-        },
-        decoration: formConstants.buildInputDecoration(context, placeHolder),
-        validator: (value) {
-          return formConstants.validateSelectedValue(value);
-        },
-        items: options
-            .map((opt) => DropdownMenuItem(
+      onSaved: (String? value) {
+        setter(value!);
+      },
+      decoration: formConstants.buildInputDecoration(context, placeHolder),
+      validator: (value) {
+        return formConstants.validateSelectedValue(value);
+      },
+      items: options
+          .map((opt) => DropdownMenuItem(
                 value: opt,
                 child: Text(
                   opt,
                   style: Theme.of(context).textTheme.bodyLarge,
-                )))
-            .toList(),
-        onChanged: (opt) => (opt));
+                ),
+              ))
+          .toList(),
+      onChanged: (opt) => (opt),
+    );
   }
 
-  Widget _buildTextFormInput(String label, BuildContext context,
-      Function(String?) validator, Function(String) setter, String? initialVehicleValue, bool setEnabled) {
+  Widget _buildTextFormInput(
+      String label,
+      BuildContext context,
+      Function(String?) validator,
+      Function(String) setter,
+      String? initialVehicleValue,
+      bool setEnabled) {
     return _buildPaddingWidget(TextFormField(
-      initialValue: initialVehicleValue,
+        initialValue: initialVehicleValue,
         enabled: setEnabled,
         onSaved: (String? value) {
           setter(value!);
@@ -157,32 +196,29 @@ class VehicleForm {
     );
   }
 
-  Padding _buildFormButton(Color primaryColor, bool isSave, BuildContext context) {
-    String text = isSave ? 'Añade' : 'Modifica';
-    ElevatedButton formButton = ElevatedButton(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(primaryColor),
-        foregroundColor: MaterialStateProperty.all(Colors.white),
-      ),
-      onPressed: () async {
-        if (_formKey.currentState!.validate()) {
-          _formKey.currentState!.save();
-          Vehicle requestVehicle = Vehicle(
-              brand: _brand,
-              color: _color,
-              line: _line,
-              model: _model,
-              plate: _plate,
-              isOwner: true);
-          bool? httpResponse = isSave ? await vehicleService.saveVehicle(requestVehicle) :
-              await vehicleService.updateVehicle(requestVehicle);
-          if(httpResponse! && httpResponse && context.mounted) Navigator.pop(context, true);
+  Padding _buildFormButton(
+      BuildContext context, Color primaryColor, bool isSave) {
+    String text = isSave ? 'Añadir' : 'Modificar';
+    return _buildPaddingWidget(
+        TemplateButtons.createPrimaryButton('$text Vehículo', () async {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        Vehicle requestVehicle = Vehicle(
+            brand: _brand,
+            color: _color,
+            line: _line,
+            model: _model,
+            plate: _plate,
+            isOwner: true);
+        if (isSave) {
+          context.read<VehicleBloc>().add(SaveVehicleRequested(requestVehicle));
+        } else {
+          context
+              .read<VehicleBloc>()
+              .add(UpdateVehicleRequested(requestVehicle));
         }
-
-      },
-      child: Text('$text Vehículo'),
-    );
-
-    return _buildPaddingWidget(formButton);
+        Navigator.pop(context, true);
+      }
+    }, context, double.maxFinite));
   }
 }

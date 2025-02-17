@@ -1,62 +1,41 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-import 'local_storage.dart';
-
+import '../config/config.dart';
+import 'auth_service.dart';
 
 class UserService {
-  final String baseUrl = LocalStorage.prefs.getString('baseUrl')!;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final String baseUrl = Config.serverBaseUrl;
+  final AuthService authService = AuthService();
 
-  Future<dynamic> saveUser(String email, String password, String name, String? photo ) async {
-
-    String photoUrl = photo ?? 'null';
-    var response = await http.post(
-      Uri.parse('$baseUrl/user/register'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: json.encode(
-          <String, Object?>{
-        'email': email,
-        'password': password,
-        'name': name,
-        'photoUrl': photoUrl,
-        'phoneNumber': null,
-        'confidenceCircle': []
-      }),
-    );
-    return response;
-
-  }
-
-  Future<dynamic> loginUser(String email, String password) async {
-
-    var response = await http.post(
-      Uri.parse('$baseUrl/authenticate'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: json.encode(
-          <String, Object?>{
-            'email': email,
-            'password': password,
-          }),
-    );
-    return response;
-  }
-
-  Future<dynamic> findAllUserData() async {
-    String? token = await _storage.read(key: 'token');
-    if(token == null) return null;
-    var response = await http.get(
+  Future<Map<String, dynamic>> fetchData(String token) async {
+    final response = await http.get(
       Uri.parse('$baseUrl/user/login'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
-    return response;
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception("Error al obtener datos del usuario: ${response.body}");
+    }
+  }
+
+  Future<Map<String, dynamic>> updateData(String token, Map<String, dynamic> data) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/user/data'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(data),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception("Error al actualizar datos del usuario: ${response.body}");
+    }
   }
 }
+
