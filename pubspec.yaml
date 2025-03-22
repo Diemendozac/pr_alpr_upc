@@ -54,6 +54,7 @@ dependencies:
   skeletonizer: ^1.4.3
   animated_check: ^1.0.5
   flutter_spinkit: ^5.2.1
+  local_auth: ^2.3.0
 
 
 dev_dependencies:
