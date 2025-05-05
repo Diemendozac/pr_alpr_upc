@@ -36,8 +36,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalStorage.configurePrefs();
   await dotenv.load(fileName: ".env");
+
+  // Verificamos si Firebase ya está inicializado
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(name: 'dev project',options: DefaultFirebaseOptions.currentPlatform);
+  }
+
+  // Inicializamos AuthStateManager después de Firebase
   await AuthStateManager.initializeAuthState();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(const MyApp());
 }
 

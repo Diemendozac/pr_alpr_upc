@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pr_alpr_upc/src/utils/form_constants.dart';
 import 'package:pr_alpr_upc/src/widgets/buttons.dart';
@@ -40,23 +41,89 @@ class VehicleForm {
   }
 
   Future<void> showForm(BuildContext context, [Vehicle? vehicle]) async {
-    Color primaryColor = Theme.of(context).colorScheme.primary;
+    // Obtener tema para soportar modo oscuro
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     List<String> brandOptions = formConstants.brandOptions;
     List<String> modelOptions = formConstants.modelOptions;
 
-    await showDialog<void>(
+    // SOLUCIÓN RADICAL: Desactivar completamente las animaciones del teclado
+    // antes de mostrar el formulario
+    SystemChannels.textInput.invokeMethod('TextInput.setAnimationDisabled', true);
+
+    try {
+      // Volvemos al BottomSheet pero con optimizaciones
+      await showModalBottomSheet<void>(
         context: context,
-        builder: (context) => AlertDialog(
-              scrollable: true,
-              title: buildFormTitle(vehicle, context),
-              titlePadding: const EdgeInsets.only(left: 20, top: 20),
-              content: Stack(
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: Form(
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        // Usar un controlador de animación personalizado extremadamente rápido
+        transitionAnimationController: AnimationController(
+          // Duración muy corta para evitar demoras perceptibles
+          duration: const Duration(milliseconds: 50),
+          vsync: Navigator.of(context),
+        ),
+        // Agregar esto para que el BottomSheet se muestre inmediatamente sin esperar a que el teclado aparezca
+        enableDrag: false,
+        builder: (BuildContext context) {
+          return Container(
+            // Usar padding que se ajusta inmediatamente al teclado
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            decoration: BoxDecoration(
+              // Usar color del tema para soportar modo oscuro
+              color: colorScheme.surface,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0),
+              ),
+            ),
+            // Limitar altura máxima
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.85,
+            ),
+            child: SingleChildScrollView(
+              // Física sin rebote para mejor rendimiento
+              physics: const ClampingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Título del formulario
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            vehicle == null ? 'Añade tu vehículo' : 'Modifica tu vehículo',
+                            // Usar titleMedium como solicitó
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: colorScheme.onSurface,
+                            ),
+                          ),
+                          if (vehicle != null)
+                            IconButton(
+                              onPressed: () {
+                                if (context.read<VehicleBloc>().state is! VehicleRequestLoading) {
+                                  context.read<VehicleBloc>().add(DeleteVehicleRequested(vehicle.plate));
+                                  Navigator.pop(context, true);
+                                }
+                              },
+                              icon: Icon(
+                                Icons.delete,
+                                color: colorScheme.secondary,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    // Formulario
+                    Form(
                       key: _formKey,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -81,65 +148,107 @@ class VehicleForm {
                               'Marca',
                               setBrand,
                               vehicle?.brand)),
-                          _buildPaddingWidget(Row(
-                            children: [
-                              Expanded(
-                                  child: buildDropdownButtonFormField(
-                                      context,
-                                      modelOptions,
-                                      'Modelo',
-                                      setModel,
-                                      vehicle?.model.toString())),
-                              const SizedBox(
-                                width: 5,
+                          // Solución al problema de responsividad
+                          _buildPaddingWidget(_buildResponsiveDropdowns(
+                              context,
+                              modelOptions,
+                              colors,
+                              setModel,
+                              setColor,
+                              vehicle?.model.toString(),
+                              vehicle?.color)),
+                          const SizedBox(height: 16),
+                          // Botón de guardar
+                          SizedBox(
+                            width: double.infinity,
+                            child: TemplateButtons.createPrimaryButton(
+                                vehicle == null ? 'Añadir Vehículo' : 'Modificar Vehículo', () async {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                Vehicle requestVehicle = Vehicle(
+                                    brand: _brand,
+                                    color: _color,
+                                    line: _line,
+                                    model: _model,
+                                    plate: _plate,
+                                    isOwner: true);
+                                if (vehicle == null) {
+                                  context.read<VehicleBloc>().add(SaveVehicleRequested(requestVehicle));
+                                } else {
+                                  context.read<VehicleBloc>().add(UpdateVehicleRequested(requestVehicle));
+                                }
+                                Navigator.pop(context, true);
+                              }
+                            }, context, double.infinity),
+                          ),
+                          const SizedBox(height: 8),
+                          // Botón de cancelar
+                          SizedBox(
+                            width: double.infinity,
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: colorScheme.primary,
                               ),
-                              Expanded(
-                                  child: buildDropdownButtonFormField(
-                                      context,
-                                      colors,
-                                      'Color',
-                                      setColor,
-                                      vehicle?.color)),
-                            ],
-                          )),
-                          _buildFormButton(
-                              context, primaryColor, vehicle == null),
+                              onPressed: () => Navigator.pop(context),
+                              child: Text('Cancelar',
+                                style: TextStyle(color: colorScheme.primary),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ));
+            ),
+          );
+        },
+      );
+    } finally {
+      // Reactivar las animaciones del teclado al cerrar
+      SystemChannels.textInput.invokeMethod('TextInput.setAnimationDisabled', false);
+    }
   }
 
-  Widget buildFormTitle(Vehicle? vehicle, BuildContext context) {
-    bool vehicleIsNull = vehicle == null;
-    Widget createTitle = const Text('Añade tu vehículo');
-    if (vehicleIsNull) return createTitle;
+  // Widget para los dropdowns responsivos
+  Widget _buildResponsiveDropdowns(
+      BuildContext context,
+      List<String> modelOptions,
+      List<String> colorOptions,
+      Function(String) setModel,
+      Function(String) setColor,
+      String? initialModelValue,
+      String? initialColorValue) {
+    // Para pantallas pequeñas, colocamos los dropdowns en columna
+    if (MediaQuery.of(context).size.width < 360) {
+      return Column(
+        children: [
+          buildDropdownButtonFormField(
+              context, modelOptions, 'Modelo', setModel, initialModelValue),
+          const SizedBox(height: 10),
+          buildDropdownButtonFormField(
+              context, colorOptions, 'Color', setColor, initialColorValue),
+        ],
+      );
+    }
 
-    Widget modifyTitle = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    // Para pantallas más grandes, usamos Row con Flexible
+    return Row(
       children: [
-        const Text('Modifica tu vehículo'),
-        IconButton(
-            onPressed: () async {
-              if (context.read<VehicleBloc>().state is! VehicleRequestLoading) {
-                context
-                    .read<VehicleBloc>()
-                    .add(DeleteVehicleRequested(vehicle.plate));
-                Navigator.pop(context, true);
-              }
-            },
-            icon: Icon(
-              Icons.delete,
-              color: Theme.of(context).colorScheme.secondary,
-            ))
+        Flexible(
+          flex: 1,
+          child: buildDropdownButtonFormField(
+              context, modelOptions, 'Modelo', setModel, initialModelValue),
+        ),
+        const SizedBox(width: 8),
+        Flexible(
+          flex: 1,
+          child: buildDropdownButtonFormField(
+              context, colorOptions, 'Color', setColor, initialColorValue),
+        ),
       ],
     );
-
-    return modifyTitle;
   }
 
   DropdownButtonFormField<String> buildDropdownButtonFormField(
@@ -153,18 +262,20 @@ class VehicleForm {
       onSaved: (String? value) {
         setter(value!);
       },
+      isExpanded: true, // Prevenir overflow
       decoration: formConstants.buildInputDecoration(context, placeHolder),
       validator: (value) {
         return formConstants.validateSelectedValue(value);
       },
       items: options
           .map((opt) => DropdownMenuItem(
-                value: opt,
-                child: Text(
-                  opt,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ))
+        value: opt,
+        child: Text(
+          opt,
+          style: Theme.of(context).textTheme.bodyLarge,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ))
           .toList(),
       onChanged: (opt) => (opt),
     );
@@ -194,31 +305,5 @@ class VehicleForm {
       padding: const EdgeInsets.all(8),
       child: widget,
     );
-  }
-
-  Padding _buildFormButton(
-      BuildContext context, Color primaryColor, bool isSave) {
-    String text = isSave ? 'Añadir' : 'Modificar';
-    return _buildPaddingWidget(
-        TemplateButtons.createPrimaryButton('$text Vehículo', () async {
-      if (_formKey.currentState!.validate()) {
-        _formKey.currentState!.save();
-        Vehicle requestVehicle = Vehicle(
-            brand: _brand,
-            color: _color,
-            line: _line,
-            model: _model,
-            plate: _plate,
-            isOwner: true);
-        if (isSave) {
-          context.read<VehicleBloc>().add(SaveVehicleRequested(requestVehicle));
-        } else {
-          context
-              .read<VehicleBloc>()
-              .add(UpdateVehicleRequested(requestVehicle));
-        }
-        Navigator.pop(context, true);
-      }
-    }, context, double.maxFinite));
   }
 }

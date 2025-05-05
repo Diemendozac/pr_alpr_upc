@@ -12,11 +12,31 @@ import '../../../models/confidence_user.dart';
 import '../../../models/user.dart';
 import 'add_confidenceuser_dialog.dart';
 
-class UserTabContainer extends StatelessWidget {
-  UserTabContainer({super.key});
+class UserTabContainer extends StatefulWidget {
+  const UserTabContainer({super.key});
 
+  @override
+  State<UserTabContainer> createState() => _UserTabContainerState();
+}
+
+class _UserTabContainerState extends State<UserTabContainer> with SingleTickerProviderStateMixin {
   final formKey = GlobalKey<FormState>();
   final ConfidenceUserService confidenceUserService = ConfidenceUserService();
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicializa el controlador una sola vez
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    // Asegúrate de liberar recursos cuando el widget se destruya
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +48,10 @@ class UserTabContainer extends StatelessWidget {
         child: BlocBuilder<UserBloc, UserState>(
           builder: (context, state) {
             if (state is UserLoaded) {
+              // Actualiza el índice si es necesario, pero no crees un nuevo controlador
+              if (state.user.confidenceUsers.isEmpty && _tabController.index != 0) {
+                _tabController.animateTo(0);
+              }
               return _buildTabContainer(context, templateButtons, state.user);
             } else {
               return Skeletonizer(child: _buildTabContainer(context, templateButtons, UserConstants.user));
@@ -41,15 +65,14 @@ class UserTabContainer extends StatelessWidget {
   TabContainer _buildTabContainer(
       BuildContext context, TemplateButtons templateButtons, User user) {
     return TabContainer(
-      controller: TabContainerController(
-          length: 2, initialIndex: user.confidenceUsers.isEmpty ? 1 : 2),
-      radius: 20,
+      controller: _tabController,
       color: Theme.of(context).colorScheme.surface,
       tabs: const [
-        'Usuarios\r\nde Confianza',
-        'Solicitudes',
+        Text('Usuarios\r\nde Confianza'),
+        Text('Solicitudes'),
       ],
       children: [
+        // Rest of your code remains the same
         Stack(
           children: [
             Padding(
@@ -75,8 +98,10 @@ class UserTabContainer extends StatelessWidget {
     );
   }
 
+  // Rest of your methods remain the same
   Padding buildBottomAddButton(
       TemplateButtons templateButtons, BuildContext context) {
+    // Your implementation
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       child: Flex(
@@ -85,9 +110,9 @@ class UserTabContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           templateButtons.createTertiaryButton('Enviar solicitud de confianza',
-              () {
-            showForm(context);
-          }, context, 0.75)
+                  () {
+                showForm(context);
+              }, context, 0.75)
         ],
       ),
     );
@@ -113,8 +138,8 @@ class UserTabContainer extends StatelessWidget {
 
   ListTile _buildConfidenceUser(
       ConfidenceUser confidenceUser, BuildContext context) {
+    // Your implementation
     ConfidenceUserService confidenceUserService = ConfidenceUserService();
-    //final userProvider = Provider.of<UserProvider>(context);
 
     return ListTile(
       title: Text(
@@ -131,7 +156,6 @@ class UserTabContainer extends StatelessWidget {
         child: const CircleAvatar(
           child: Image(
             image: AssetImage('assets/img/brands/emily.png'),
-            // AssetImage('assets/img/brands/emily.png')
             fit: BoxFit.cover,
           ),
         ),
@@ -150,8 +174,8 @@ class UserTabContainer extends StatelessWidget {
 
   ListTile _buildConfidenceRequest(
       ConfidenceUser confidenceUser, BuildContext context) {
+    // Your implementation
     ConfidenceUserService confidenceUserService = ConfidenceUserService();
-    //final userProvider = Provider.of<UserProvider>(context);
 
     return ListTile(
       title: Text(
@@ -168,7 +192,6 @@ class UserTabContainer extends StatelessWidget {
         child: const CircleAvatar(
           child: Image(
             image: AssetImage('assets/img/brands/emily.png'),
-            // AssetImage('assets/img/brands/emily.png')
             fit: BoxFit.cover,
           ),
         ),
@@ -203,8 +226,7 @@ class UserTabContainer extends StatelessWidget {
     await showDialog<void>(
         context: context,
         builder: (context) => AddUserFormDialog(
-              confidenceUserService:
-                  ConfidenceUserService(), // Pasa tu instancia de servicio aquí
-            ));
+          confidenceUserService: ConfidenceUserService(),
+        ));
   }
 }
